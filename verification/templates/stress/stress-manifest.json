@@ -1,0 +1,227 @@
+[
+ {
+  "id": "bj6",
+  "kind": "max",
+  "diag": 8,
+  "drugs": 5,
+  "page": {
+   "widthPt": 836,
+   "heightPt": 470.5
+  },
+  "limits": {
+   "maxDiag": 8,
+   "maxDrugs": 5
+  },
+  "png": "studio\\out\\stress-bj6-max.png"
+ },
+ {
+  "id": "bj6",
+  "kind": "min",
+  "diag": 1,
+  "drugs": 1,
+  "page": {
+   "widthPt": 836,
+   "heightPt": 470.5
+  },
+  "limits": {
+   "maxDiag": 8,
+   "maxDrugs": 5
+  },
+  "png": "studio\\out\\stress-bj6-min.png"
+ },
+ {
+  "id": "bj6",
+  "kind": "long",
+  "diag": 8,
+  "drugs": 5,
+  "page": {
+   "widthPt": 836,
+   "heightPt": 470.5
+  },
+  "limits": {
+   "maxDiag": 8,
+   "maxDrugs": 5
+  },
+  "png": "studio\\out\\stress-bj6-long.png"
+ },
+ {
+  "id": "zz",
+  "kind": "max",
+  "diag": 12,
+  "drugs": 20,
+  "page": {
+   "widthPt": 419.5,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 12,
+   "maxDrugs": 20
+  },
+  "png": "studio\\out\\stress-zz-max.png"
+ },
+ {
+  "id": "zz",
+  "kind": "min",
+  "diag": 1,
+  "drugs": 1,
+  "page": {
+   "widthPt": 419.5,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 12,
+   "maxDrugs": 20
+  },
+  "png": "studio\\out\\stress-zz-min.png"
+ },
+ {
+  "id": "zz",
+  "kind": "long",
+  "diag": 8,
+  "drugs": 8,
+  "page": {
+   "widthPt": 419.5,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 12,
+   "maxDrugs": 20
+  },
+  "png": "studio\\out\\stress-zz-long.png"
+ },
+ {
+  "id": "bj3",
+  "kind": "max",
+  "diag": 6,
+  "drugs": 6,
+  "page": {
+   "widthPt": 842,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 6,
+   "maxDrugs": 6
+  },
+  "png": "studio\\out\\stress-bj3-max.png"
+ },
+ {
+  "id": "bj3",
+  "kind": "min",
+  "diag": 1,
+  "drugs": 1,
+  "page": {
+   "widthPt": 842,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 6,
+   "maxDrugs": 6
+  },
+  "png": "studio\\out\\stress-bj3-min.png"
+ },
+ {
+  "id": "bj3",
+  "kind": "long",
+  "diag": 6,
+  "drugs": 6,
+  "page": {
+   "widthPt": 842,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 6,
+   "maxDrugs": 6
+  },
+  "png": "studio\\out\\stress-bj3-long.png"
+ },
+ {
+  "id": "zy",
+  "kind": "max",
+  "diag": 6,
+  "drugs": 6,
+  "page": {
+   "widthPt": 419.5,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 6,
+   "maxDrugs": 6
+  },
+  "png": "studio\\out\\stress-zy-max.png"
+ },
+ {
+  "id": "zy",
+  "kind": "min",
+  "diag": 1,
+  "drugs": 1,
+  "page": {
+   "widthPt": 419.5,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 6,
+   "maxDrugs": 6
+  },
+  "png": "studio\\out\\stress-zy-min.png"
+ },
+ {
+  "id": "zy",
+  "kind": "long",
+  "diag": 6,
+  "drugs": 6,
+  "page": {
+   "widthPt": 419.5,
+   "heightPt": 595.3
+  },
+  "limits": {
+   "maxDiag": 6,
+   "maxDrugs": 6
+  },
+  "png": "studio\\out\\stress-zy-long.png"
+ },
+ {
+  "id": "cq",
+  "kind": "max",
+  "diag": 8,
+  "drugs": 60,
+  "page": {
+   "widthPt": 559,
+   "heightPt": 794
+  },
+  "limits": {
+   "maxDiag": 8,
+   "maxDrugs": 60
+  },
+  "png": "studio\\out\\stress-cq-max.png"
+ },
+ {
+  "id": "cq",
+  "kind": "min",
+  "diag": 1,
+  "drugs": 1,
+  "page": {
+   "widthPt": 559,
+   "heightPt": 794
+  },
+  "limits": {
+   "maxDiag": 8,
+   "maxDrugs": 60
+  },
+  "png": "studio\\out\\stress-cq-min.png"
+ },
+ {
+  "id": "cq",
+  "kind": "long",
+  "diag": 8,
+  "drugs": 8,
+  "page": {
+   "widthPt": 559,
+   "heightPt": 794
+  },
+  "limits": {
+   "maxDiag": 8,
+   "maxDrugs": 60
+  },
+  "png": "studio\\out\\stress-cq-long.png"
+ }
+]

@@ -1,0 +1,295 @@
+[
+ {
+  "tid": "bj6",
+  "file": "tpl-bj6.png",
+  "size": [
+   1672,
+   941
+  ],
+  "n_bands": 10,
+  "n_hrules": 4,
+  "n_vrules": 2,
+  "c1_crossing": {
+   "pass_": true,
+   "n_hits": 0,
+   "hits": []
+  },
+  "c2_baseline": {
+   "pass_": true,
+   "n_bad": 0,
+   "bad": []
+  },
+  "c6_dup": {
+   "pass_": true,
+   "n_dup": 0,
+   "dups": []
+  },
+  "c34_cols": [],
+  "c5_rhythm": []
+ },
+ {
+  "tid": "zz",
+  "file": "tpl-zz.png",
+  "size": [
+   839,
+   1191
+  ],
+  "n_bands": 13,
+  "n_hrules": 6,
+  "n_vrules": 0,
+  "c1_crossing": {
+   "pass_": true,
+   "n_hits": 0,
+   "hits": []
+  },
+  "c2_baseline": {
+   "pass_": true,
+   "n_bad": 0,
+   "bad": []
+  },
+  "c6_dup": {
+   "pass_": true,
+   "n_dup": 0,
+   "dups": []
+  },
+  "c34_cols": [],
+  "c5_rhythm": []
+ },
+ {
+  "tid": "bj3",
+  "file": "tpl-bj3.png",
+  "size": [
+   1684,
+   1191
+  ],
+  "n_bands": 21,
+  "n_hrules": 3,
+  "n_vrules": 0,
+  "c1_crossing": {
+   "pass_": true,
+   "n_hits": 0,
+   "hits": []
+  },
+  "c2_baseline": {
+   "pass_": true,
+   "n_bad": 0,
+   "bad": []
+  },
+  "c6_dup": {
+   "pass_": true,
+   "n_dup": 0,
+   "dups": []
+  },
+  "c34_cols": [
+   {
+    "name": "数量列中心",
+    "pass_": true,
+    "note": "有效样本不足(1)",
+    "n": 1,
+    "values": [
+     1072.5
+    ]
+   },
+   {
+    "name": "频率列中心",
+    "pass_": true,
+    "note": "有效样本不足(1)",
+    "n": 1,
+    "values": [
+     1202.0
+    ]
+   },
+   {
+    "name": "用量列中心",
+    "pass_": true,
+    "note": "有效样本不足(1)",
+    "n": 1,
+    "values": [
+     1321.0
+    ]
+   },
+   {
+    "name": "途径列中心",
+    "pass_": true,
+    "note": "有效样本不足(1)",
+    "n": 1,
+    "values": [
+     1454.0
+    ]
+   }
+  ],
+  "c5_rhythm": [
+   {
+    "name": "药品表格(每条两行)",
+    "n": 9,
+    "inner": [
+     20,
+     18,
+     17,
+     17
+    ],
+    "across": [
+     13,
+     12,
+     12,
+     12
+    ],
+    "range_inner": 3,
+    "range_across": 1,
+    "tol": 3,
+    "pass_": true
+   }
+  ]
+ },
+ {
+  "tid": "zy",
+  "file": "tpl-zy.png",
+  "size": [
+   839,
+   1191
+  ],
+  "n_bands": 23,
+  "n_hrules": 12,
+  "n_vrules": 0,
+  "c1_crossing": {
+   "pass_": true,
+   "n_hits": 0,
+   "hits": []
+  },
+  "c2_baseline": {
+   "pass_": true,
+   "n_bad": 0,
+   "bad": []
+  },
+  "c6_dup": {
+   "pass_": true,
+   "n_dup": 0,
+   "dups": []
+  },
+  "c34_cols": [
+   {
+    "name": "数量列(QTY_X=260pt)",
+    "pass_": true,
+    "n": 4,
+    "values": [
+     523.0,
+     523.0,
+     521.0,
+     523.0
+    ],
+    "range": 2.0,
+    "tol": 5,
+    "near_ratio": 1.0,
+    "expect": 520,
+    "edge": "left"
+   }
+  ],
+  "c5_rhythm": []
+ },
+ {
+  "tid": "cq",
+  "file": "tpl-cq.png",
+  "size": [
+   1118,
+   1588
+  ],
+  "n_bands": 21,
+  "n_hrules": 14,
+  "n_vrules": 0,
+  "c1_crossing": {
+   "pass_": true,
+   "n_hits": 0,
+   "hits": []
+  },
+  "c2_baseline": {
+   "pass_": true,
+   "n_bad": 0,
+   "bad": []
+  },
+  "c6_dup": {
+   "pass_": true,
+   "n_dup": 0,
+   "dups": []
+  },
+  "c34_cols": [
+   {
+    "name": "宫格第1栏",
+    "pass_": true,
+    "n": 8,
+    "values": [
+     40.0,
+     39.0,
+     43.0,
+     40.0,
+     40.0,
+     39.0,
+     40.0,
+     40.0
+    ],
+    "range": 4.0,
+    "tol": 5,
+    "near_ratio": 0.88,
+    "expect": 38,
+    "edge": "left"
+   },
+   {
+    "name": "宫格第2栏",
+    "pass_": true,
+    "n": 8,
+    "values": [
+     423.0,
+     425.0,
+     423.0,
+     423.0,
+     423.0,
+     423.0,
+     423.0,
+     423.0
+    ],
+    "range": 2.0,
+    "tol": 5,
+    "near_ratio": 1.0,
+    "expect": 421,
+    "edge": "left"
+   },
+   {
+    "name": "宫格第3栏",
+    "pass_": true,
+    "n": 8,
+    "values": [
+     806.0,
+     807.0,
+     809.0,
+     806.0,
+     806.0,
+     805.0,
+     808.0,
+     805.0
+    ],
+    "range": 4.0,
+    "tol": 5,
+    "near_ratio": 0.88,
+    "expect": 804,
+    "edge": "left"
+   }
+  ],
+  "c5_rhythm": [
+   {
+    "name": "药味宫格(每行一味)",
+    "n": 8,
+    "gaps": [
+     34,
+     34,
+     34,
+     34,
+     34,
+     34,
+     34
+    ],
+    "range": 0,
+    "tol": 3,
+    "pass_": true
+   }
+  ]
+ }
+]

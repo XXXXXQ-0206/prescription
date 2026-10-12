@@ -1,0 +1,54 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Dependencies
+# ─────────────────────────────────────────────────────────────────────────────
+node_modules/
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Build / packaging output
+# ─────────────────────────────────────────────────────────────────────────────
+dist/
+out/
+release/
+tmp/
+.vite/
+*.tsbuildinfo
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Patient data & reference scans — NEVER commit
+#  refs/ holds scans of real prescriptions (real patient names / record numbers).
+# ─────────────────────────────────────────────────────────────────────────────
+refs/
+origin_pic.png
+analysis/
+studio/analysis/
+verification/**/*.png
+verification/*.png
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Generated / local artifacts (bundles, renders, installers, documents)
+# ─────────────────────────────────────────────────────────────────────────────
+*.exe
+*.pdf
+*.dmg
+*.msi
+prescription.png
+prescription_2x.png
+shot.png
+*.local
+
+# Orphan esbuild bundle with no .ts source (contains original sample identifiers)
+studio/scripts/_bj3chk.mjs
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Python bytecode cache (verification tooling)
+# ─────────────────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Editors / OS
+# ─────────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
