@@ -1,0 +1,15 @@
+/* 样式入口（复用 codex-desktop-src 的设计系统）：
+   1. tailwindcss 基线
+   2. tokens.css —— 官方 design token（颜色阶/字号阶/圆角/间距/阴影/动效）
+   3. theme.css  —— token → 主题机制（明暗双值、Tailwind 出口）
+   4. base.css   —— 元素级基线（字体栈、滚动条、选中色、焦点环）
+   5. app.css    —— 外壳/页面级全局规则
+   6. studio.css —— 本应用自己的版面规则 */
+@import "tailwindcss" source(none);
+@source "../../src";
+@source "../../index.html";
+@import "./tokens.css";
+@import "./theme.css";
+@import "./base.css";
+@import "./app.css";
+@import "./studio.css";

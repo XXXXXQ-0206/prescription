@@ -1,0 +1,167 @@
+[
+ {
+  "tpl": "bj3",
+  "elem": "通栏横线",
+  "desc": "180.6 -> 180.8pt",
+  "declared": 180.8,
+  "measured": 180.5,
+  "diff": 0.3,
+  "tol": 1.0,
+  "pass_": true,
+  "note": ""
+ },
+ {
+  "tpl": "bj3",
+  "elem": "诊断行顶",
+  "desc": "诊断 y 171.7 -> 166.5pt",
+  "declared": 166.5,
+  "measured": 165.0,
+  "diff": 1.5,
+  "tol": 3.0,
+  "pass_": true,
+  "note": "实测带 y330..351（墨迹顶）"
+ },
+ {
+  "tpl": "bj3",
+  "elem": "诊断行右端",
+  "desc": "版心右界 820.5pt",
+  "declared": 820.5,
+  "measured": 175.5,
+  "diff": null,
+  "tol": null,
+  "pass_": null,
+  "note": "默认诊断较短未触界，实测右端=351px（175.5pt）；仅作参考，不判定"
+ },
+ {
+  "tpl": "bj3",
+  "elem": "药品行距",
+  "desc": "31.5 -> 36.3pt",
+  "declared": 36.3,
+  "measured": 36.5,
+  "diff": 0.2,
+  "tol": 1.0,
+  "pass_": true,
+  "note": "各值=[36.5, 36.0, 36.5]"
+ },
+ {
+  "tpl": "zz",
+  "elem": "页脚横线",
+  "desc": "528 -> 535pt",
+  "declared": 535,
+  "measured": 534.5,
+  "diff": 0.5,
+  "tol": 1.0,
+  "pass_": true,
+  "note": ""
+ },
+ {
+  "tpl": "zz",
+  "elem": "页脚行距1",
+  "desc": "20 -> 18pt",
+  "declared": 18,
+  "measured": 18.0,
+  "diff": 0.0,
+  "tol": 1.0,
+  "pass_": true,
+  "note": "带=[(1080, 1096), (1116, 1132), (1153, 1166)]"
+ },
+ {
+  "tpl": "zz",
+  "elem": "页脚行距2",
+  "desc": "15 -> 18pt",
+  "declared": 18,
+  "measured": 18.5,
+  "diff": 0.5,
+  "tol": 1.0,
+  "pass_": true,
+  "note": "带=[(1080, 1096), (1116, 1132), (1153, 1166)]"
+ },
+ {
+  "tpl": "zz",
+  "elem": "日期行右端",
+  "desc": "右端统一 376pt",
+  "declared": 376,
+  "measured": 376.0,
+  "diff": 0.0,
+  "tol": 1.0,
+  "pass_": true,
+  "note": ""
+ },
+ {
+  "tpl": "zy",
+  "elem": "通栏线123",
+  "desc": "通栏线 y=123pt",
+  "declared": 123,
+  "measured": 123.0,
+  "diff": 0.0,
+  "tol": 1.0,
+  "pass_": true,
+  "note": ""
+ },
+ {
+  "tpl": "zy",
+  "elem": "通栏线500",
+  "desc": "通栏线 y=500pt",
+  "declared": 500,
+  "measured": 500.0,
+  "diff": 0.0,
+  "tol": 1.0,
+  "pass_": true,
+  "note": ""
+ },
+ {
+  "tpl": "zy",
+  "elem": "通栏线532",
+  "desc": "通栏线 y=532pt",
+  "declared": 532,
+  "measured": 532.0,
+  "diff": 0.0,
+  "tol": 1.0,
+  "pass_": true,
+  "note": ""
+ },
+ {
+  "tpl": "zy",
+  "elem": "同味两行距",
+  "desc": "16.4 -> 14.6pt",
+  "declared": 14.6,
+  "measured": 14.5,
+  "diff": 0.1,
+  "tol": 1.0,
+  "pass_": true,
+  "note": "各值=[14.5, 14.5, 14.5, 14.5]"
+ },
+ {
+  "tpl": "zy",
+  "elem": "相邻两味距",
+  "desc": "31.1 -> 27.7pt",
+  "declared": 27.7,
+  "measured": 27.75,
+  "diff": 0.05,
+  "tol": 1.0,
+  "pass_": true,
+  "note": "各值=[27.5, 28.0, 27.5, 31.5]（= 同味内 + 味间）"
+ },
+ {
+  "tpl": "zy",
+  "elem": "数量列起点",
+  "desc": "由流式改为固定 x=260pt",
+  "declared": 260,
+  "measured": 261.5,
+  "diff": 1.5,
+  "tol": 2.0,
+  "pass_": true,
+  "note": "各值(px)=[523, 523, 521, 523]（含字形左侧边距 +1~+3px）"
+ },
+ {
+  "tpl": "cq",
+  "elem": "核对发药标签",
+  "desc": "246 -> 326pt",
+  "declared": 326,
+  "measured": 327.0,
+  "diff": 1.0,
+  "tol": 1.0,
+  "pass_": true,
+  "note": "左标签起笔=41px(20.5pt)，右标签起笔=654px"
+ }
+]
