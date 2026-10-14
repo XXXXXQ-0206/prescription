@@ -15,9 +15,9 @@
 *.woff2 binary
 *.npy binary
 
-# Generated bundles: keep them out of diffs and language statistics.
-studio/scripts/*.mjs linguist-generated=true
-studio/package-lock.json linguist-generated=true -diff
+# The lockfile is generated, so keep it out of language statistics — but leave it
+# diffable: dependency changes must stay reviewable in pull requests.
+studio/package-lock.json linguist-generated=true
 
 # Documentation-only trees are not counted as source code.
 verification/** linguist-documentation=true

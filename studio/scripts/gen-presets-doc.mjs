@@ -14,13 +14,18 @@ const P = await import(pathToFileURL(outfile).href);
 rmSync(outdir, { recursive: true, force: true });
 
 const { HOSPITALS, DEPARTMENTS, DIAGNOSES, DRUGS, DOCTORS, FEE_TYPES, DOC_TYPES, USAGE_PRESETS, TIP_PRESETS, REGIMENS, GENDERS, INSURANCE_PRESETS } = P;
-const esc = (s) => String(s).replace(/\|/g, "\\|");
+// Markdown table cell: escape the backslash first, then the column separator, and
+// flatten newlines so a value can never break out of its row.
+const esc = (s) =>
+  String(s ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/\|/g, "\\|")
+    .replace(/\r?\n/g, " ");
 const table = (head, rows) => {
   const out = ["| " + head.join(" | ") + " |", "| " + head.map(() => "---").join(" | ") + " |"];
   for (const r of rows) out.push("| " + r.map(esc).join(" | ") + " |");
   return out.join("\n");
 };
-const num = (a, b) => a - b;
 
 const diagTotal = DIAGNOSES.reduce((n, g) => n + g.items.length, 0);
 const byClass = new Map();

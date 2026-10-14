@@ -1,6 +1,6 @@
 import { totalOf } from "@/lib/doc";
 import type { PrescriptionDoc } from "@/lib/doc";
-import { BARCODE_HELPER, QR_HELPER, barcodeBlock, esc, money, preamble, qrBlock, trim, tw } from "@/templates/kit";
+import { BARCODE_HELPER, QR_HELPER, barcodeBlock, money, preamble, qrBlock, trim, tw } from "@/templates/kit";
 import type { Template } from "@/templates/types";
 
 /**
@@ -38,8 +38,16 @@ const NOTE_DEFAULT =
 
 const pt = (v: number) => String(Math.round(v * 100) / 100);
 
-/** 内容模式转义：先做字符串转义，再转义 Typst 标记字符 */
-const cx = (s: unknown) => esc(String(s ?? "")).replace(/([#$\[\]*_])/g, "\\$1");
+/**
+ * 内容模式转义：**必须先转义反斜杠，再转义引号，最后转义 Typst 标记字符**。
+ * 顺序不能调换：先补 \# 这类标记转义、再转义反斜杠会把刚补上的反斜杠二次转义。
+ * 与 `esc()` 的输出等价（esc 就是前两步），此处内联是为了让转义链自包含。
+ */
+const cx = (s: unknown) =>
+  String(s ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/([#$\[\]*_])/g, "\\$1");
 
 /** 生成期按可用宽度自动缩字号（em 估算），保证长名字/长规格不溢出、不串栏 */
 function fit(text: string, size: number, maxW: number) {
