@@ -1,5 +1,5 @@
 import { rolldown } from "rolldown";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -178,5 +178,8 @@ L.push("每条药品字段是否非空且价格有效，以及各项数量下限
 L.push("");
 
 const md = L.join("\n") + "\n";
-writeFileSync(path.join(root, "docs/PRESETS.md"), md, "utf8");
-console.log("written docs/PRESETS.md, chars=" + md.length);
+// The Chinese original lives next to its hand-written English counterpart (docs/PRESETS.md).
+const outPath = path.join(root, "..", "docs", "zh-CN", "PRESETS.md");
+mkdirSync(path.dirname(outPath), { recursive: true });
+writeFileSync(outPath, md, "utf8");
+console.log("written docs/zh-CN/PRESETS.md, chars=" + md.length);

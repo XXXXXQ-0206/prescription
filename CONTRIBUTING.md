@@ -90,7 +90,8 @@ npm start          # build the renderer and launch the app
   in the template's `defaults` / `src/lib/doc.ts`. Never "fix" a layout by editing a sample value.
 - Match the surrounding style of the file you edit (the codebase uses 2-space indentation, double quotes and
   Chinese comments in `src/`). Do not reformat unrelated code in the same pull request.
-- Add or update the relevant documentation in `studio/docs/` when behaviour changes.
+- Add or update the relevant documentation in `docs/` (English) and `docs/zh-CN/` (Chinese) when
+  behaviour changes.
 
 ## Commit messages
 
@@ -114,8 +115,9 @@ Common types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build
 2. Make your change in small, self-contained commits with Conventional Commit messages.
 3. Run the [self-checks](#self-checks-that-must-pass) locally.
 4. Push your branch and open a pull request against `main`; fill in the pull request template.
-5. CI (CodeQL, Dependabot) must be green. Address review comments by pushing new commits — **never force-push
-   a branch that is under review**.
+5. CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) and CodeQL must be green; Dependabot keeps the
+   dependencies and the Actions up to date. Address review comments by pushing new commits — **never
+   force-push a branch that is under review**.
 6. Pull requests are **squash-merged** to keep the history of `main` linear and readable.
 
 ## Self-checks that must pass
@@ -123,11 +125,15 @@ Common types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build
 Run all of these from `studio/` before opening a pull request:
 
 ```bash
+npm run fetch:typst              # Typst 0.15.1 → resources/typst.exe (once per clone)
 npx tsc --noEmit                 # type-check
+npm run bundle                   # rebuild scripts/*.mjs from scripts/*.ts
 npm run build                    # renderer build
 node scripts/render-all.mjs      # render all 5 templates with their demo data
 node scripts/test-variants.mjs   # compile every layout variant
 node scripts/check-presets.mjs   # preset-library consistency assertions
+node scripts/check-odrisk.mjs    # overdose-risk table assertions
+node scripts/check-tcm.mjs       # traditional-medicine herb library assertions
 ```
 
 When you change a template, also render the stress cases and inspect the images:
@@ -136,29 +142,37 @@ When you change a template, also render the stress cases and inspect the images:
 node scripts/stress-templates.mjs
 ```
 
-`.mjs` entry points that have a `.ts` sibling are pre-bundled; regenerate them after editing the source:
+A `scripts/<name>.mjs` that has a `.ts` sibling is a **build product**, not a source file, and is not
+committed. Rebuild all of them (or a single one) with:
 
 ```bash
-npx esbuild scripts/<name>.ts --bundle --format=esm --platform=node \
-  --outfile=scripts/<name>.mjs '--alias:@=./src'
+npm run bundle                    # every stale entry point
+npm run bundle -- render-all      # one entry point
+npm run bundle -- --force         # ignore timestamps
+npm run bundle -- --check         # verify only, write nothing (used by CI)
 ```
 
 ## Adding a hospital template
 
-1. Read [`studio/docs/TEMPLATES.md`](studio/docs/TEMPLATES.md) and copy the closest existing template.
+1. Read [`docs/TEMPLATES.md`](docs/TEMPLATES.md) (or [`docs/zh-CN/TEMPLATES.md`](docs/zh-CN/TEMPLATES.md)) and
+   copy the closest existing template.
 2. Create `studio/src/templates/<id>.ts` exporting a `Template` object:
    `id`, `name`, `hospital`, `desc`, `group`, `page`, `limits`, `sections`, `extraKeys`, `defaults`, `build`.
 3. Register it in `studio/src/templates/index.ts`.
 4. Use **fictional** demo data in `defaults` (same length/format as the real value you are replacing).
 5. Verify: `node scripts/render-all.mjs <id>` and `node scripts/stress-templates.mjs`, then look at the
    generated PNGs for overlaps and overflow.
-6. Document the template in `studio/docs/TEMPLATES.md`.
+6. Document the template in [`docs/TEMPLATES.md`](docs/TEMPLATES.md) and its Chinese counterpart
+   [`docs/zh-CN/TEMPLATES.md`](docs/zh-CN/TEMPLATES.md).
 
 ## Documentation and translations
 
 - `README.md` is the English reference; `README.zh-CN.md` must stay a faithful translation with the same
   section structure. If you change one, change the other in the same pull request.
-- `studio/docs/` holds the in-depth, Chinese-language technical notes (templates, presets, packaging).
+- `docs/` holds the in-depth English references (`TEMPLATES.md`, `PRESETS.md`, `PACKAGING.md`) and
+  `docs/zh-CN/` their Chinese originals. Keep both languages in sync.
+- `docs/zh-CN/PRESETS.md` is generated: run `node scripts/gen-presets-doc.mjs` from `studio/` after changing
+  `src/data/presets.ts`, and never hand-edit it. The English `docs/PRESETS.md` is hand-written.
 - Keep code samples in documentation runnable as written.
 
 Thank you for contributing!
