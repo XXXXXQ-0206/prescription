@@ -6,7 +6,7 @@
 排版内核是 [Typst](https://typst.app)：表单数据 → .typ 源码 → 矢量 SVG 预览 / PDF / PNG，
 所以预览与导出**完全一致**，放大不糊，输出的 .typ 还能直接进版本库或用命令行再编译。
 
-> 面向使用者请读根目录的 [`../README.md`](../README.md)（英文）或 [`../README.zh-CN.md`](../README.zh-CN.md)（中文）。
+> 面向使用者请读根目录的 [`../README.md`](../README.md)。
 > 深入文档：[`../docs/zh-CN/TEMPLATES.md`](../docs/zh-CN/TEMPLATES.md)（模板系统）、
 > [`../docs/zh-CN/PRESETS.md`](../docs/zh-CN/PRESETS.md)（预设库，改数据看这份）、
 > [`../docs/zh-CN/PACKAGING.md`](../docs/zh-CN/PACKAGING.md)（打包与分发）。
