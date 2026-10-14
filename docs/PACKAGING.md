@@ -578,6 +578,40 @@ Right-click `Prescription Master.bat` → "Send to" → "Desktop (create shortcu
 `shell:startup` to launch it at logon. An `.ico` converted from `app/resources/icon.png` can be used as the
 shortcut icon.
 
+## How to cut a release
+
+Releases are produced by [`.github/workflows/release.yml`](../.github/workflows/release.yml), which is
+**manual only** (`workflow_dispatch`): pushing a tag or merging a pull request never publishes anything.
+
+1. **Dry run first.** *Actions* → *Release* → *Run workflow*, pick the revision to release (normally `main`),
+   and set:
+   - `tag` — the version you are about to publish, for example `v1.0.1`;
+   - `dry_run` — `true` (the default): the workflow builds everything, prints the SHA-256 checksums in the
+     job summary and uploads the artifacts to the run, but **never creates or modifies a release**;
+   - `prerelease` — `false` unless this is a release candidate.
+2. **Inspect the run.** It performs `npm ci` → `npm run bundle` → `npm run build` →
+   `node scripts/fetch-typst.mjs` → `node scripts/render-all.mjs` → `npx electron-builder --win --x64` →
+   `SHA256SUMS.txt`. Download the artifacts and smoke-test the portable build.
+3. **Publish.** Run the workflow again with `dry_run: false`. The `publish` job is the only one with
+   `contents: write`: it creates the release on the dispatched commit
+   (`gh release create --target <sha>`) or uploads/replaces the assets when the release already exists
+   (`gh release upload --clobber`).
+4. **Afterwards.** Verify the assets and move the `[Unreleased]` entries of `CHANGELOG.md` under the new
+   version.
+
+### Caveats
+
+- **The binaries are not code-signed.** No certificate is configured, so Windows SmartScreen and some antivirus
+  products warn about an unknown publisher. Every release ships `SHA256SUMS.txt` so users can verify what they
+  downloaded (`Get-FileHash .\Prescription-Master-Setup-<version>.exe -Algorithm SHA256`, or
+  `certutil -hashfile <file> SHA256`). A code-signing certificate is the only real fix.
+- **Assets are built in CI from the dispatched revision**, which is what makes them reproducible. Do not upload
+  locally built binaries without publishing their checksums too.
+- CI does **not** silently install the NSIS package (that would need a throwaway VM); smoke-test the portable
+  build instead.
+- `CSC_IDENTITY_AUTO_DISCOVERY: "false"` is set for the packaging step so a missing certificate cannot make the
+  build fail halfway.
+
 ## Distribution checklist
 
 - [ ] `npm run build` succeeded and `dist/index.html` is up to date

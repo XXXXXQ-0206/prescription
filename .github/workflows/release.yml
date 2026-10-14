@@ -1,0 +1,151 @@
+name: Release
+
+# Manual only — this workflow never runs on push or pull_request, so a release can
+# never be published by accident.
+#
+#   dry_run = true  (default)  build the Windows artifacts, upload them as workflow
+#                              artifacts and stop. No release is created or touched.
+#   dry_run = false            additionally create the GitHub release for <tag> (or
+#                              upload/replace its assets) with the built files.
+#
+# Dispatch it from the revision you want to release (normally `main`). The tag is
+# created on that revision. Artifacts are unsigned — see docs/PACKAGING.md
+# "How to cut a release" for the SmartScreen/checksum caveats.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (for example v1.0.1)"
+        required: true
+        type: string
+      dry_run:
+        description: "Build only — upload workflow artifacts, never create a release"
+        required: true
+        default: true
+        type: boolean
+      prerelease:
+        description: "Mark the release as a pre-release (ignored when dry_run is true)"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+# Never cancel a release build halfway; queue instead.
+concurrency:
+  group: release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Windows artifacts
+    runs-on: windows-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: studio
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bundle self-check scripts
+        run: npm run bundle
+
+      - name: Build renderer
+        run: npm run build
+
+      - name: Fetch the Typst runtime
+        run: node scripts/fetch-typst.mjs
+
+      - name: Render all five templates (smoke test before packaging)
+        run: node scripts/render-all.mjs
+
+      - name: Package the desktop application
+        # No code-signing certificate is configured. Disable auto-discovery so the
+        # build is deterministic instead of failing on a certificate lookup.
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: npx electron-builder --win --x64
+
+      - name: Generate SHA256SUMS.txt
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem release/*.exe | Where-Object { $_.Name -notlike "*.blockmap" }
+          if ($files.Count -eq 0) { Write-Error "electron-builder produced no .exe"; exit 1 }
+          $files | ForEach-Object { (Get-FileHash $_.FullName -Algorithm SHA256).Hash + "  " + $_.Name } |
+            Set-Content -Encoding ascii release/SHA256SUMS.txt
+          Get-Content release/SHA256SUMS.txt
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-release-assets
+          path: |
+            studio/release/*.exe
+            studio/release/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summary
+        shell: pwsh
+        run: |
+          $mode = if ("${{ inputs.dry_run }}" -eq "true") { "DRY RUN - no release will be created" } else { "PUBLISH - release ${{ inputs.tag }} will be created/updated" }
+          "Mode: $mode" >> $env:GITHUB_STEP_SUMMARY
+          "Tag: ${{ inputs.tag }}" >> $env:GITHUB_STEP_SUMMARY
+          "Commit: ${{ github.sha }}" >> $env:GITHUB_STEP_SUMMARY
+          "" >> $env:GITHUB_STEP_SUMMARY
+          "``````" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content release/SHA256SUMS.txt >> $env:GITHUB_STEP_SUMMARY
+          "``````" >> $env:GITHUB_STEP_SUMMARY
+
+  publish:
+    name: Publish GitHub release
+    needs: build
+    # The only job with write access, and it is skipped entirely for a dry run.
+    if: ${{ inputs.dry_run == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download the built artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: windows-release-assets
+          path: release-assets
+
+      - name: Create or update the release
+        # Inputs arrive through the environment, never interpolated into the script.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+          PRERELEASE: ${{ inputs.prerelease }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          ls -l release-assets
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG exists - uploading/replacing assets"
+            gh release upload "$TAG" release-assets/* --clobber
+          else
+            echo "Creating release $TAG on $TARGET_SHA"
+            args=(--title "$TAG" --target "$TARGET_SHA" --generate-notes)
+            if [ "$PRERELEASE" = "true" ]; then args+=(--prerelease); fi
+            gh release create "$TAG" release-assets/* "${args[@]}"
+          fi
+          gh release view "$TAG" --json tagName,isPrerelease,assets --jq "{tag: .tagName, prerelease: .isPrerelease, assets: [.assets[] | {name, size}]}"
