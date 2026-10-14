@@ -29,6 +29,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   `docs/` (`PACKAGING.md`, `TEMPLATES.md`, `PRESETS.md`) beside their Chinese originals in `docs/zh-CN/`,
   and both READMEs gained *Demo Data*, *Getting the Typst Runtime* and *Security & Privacy* sections plus CI
   and CodeQL badges.
+- **Manual release pipeline** — [`.github/workflows/release.yml`](.github/workflows/release.yml) is
+  `workflow_dispatch`-only and defaults to `dry_run: true`, which builds the Windows installer and portable
+  build in CI, prints the SHA-256 checksums and uploads them as workflow artifacts **without touching any
+  release**. Only an explicit `dry_run: false` run reaches the `publish` job (the single job with
+  `contents: write`), which creates the release on the dispatched commit or replaces its assets. Documented in
+  [`docs/PACKAGING.md`](docs/PACKAGING.md#how-to-cut-a-release) and `docs/zh-CN/PACKAGING.md`.
 
 ### Changed
 
@@ -37,6 +43,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   `npm run bundle` after a clone (or after editing a source). The hand-written `.mjs` tools remain tracked.
 - `rolldown` is declared as an explicit devDependency instead of relying on the copy that Vite happens to
   hoist, and `studio/package-lock.json` is kept in sync for `npm ci`.
+- **TypeScript 5.9 → 7.0** (the native compiler): `baseUrl` was removed from `studio/tsconfig.json` (paths now
+  resolve relative to the config file, so the `@/*` alias is unchanged) and `studio/src/vite-env.d.ts` was
+  added, because TypeScript 7 reports unresolved side-effect imports such as `import "./ui.css"` as errors.
+  Type checking was not weakened: no option was relaxed and no `@ts-ignore` was added.
+- `studio/scripts/.gitignore` now **lists the ten generated artifacts explicitly** instead of ignoring
+  `*.mjs` with a negation whitelist — a new hand-written tool is tracked by default, which is exactly what the
+  previous rule got wrong for `fetch-typst.mjs`. The root `.gitignore` also dropped two redundant rules
+  (`studio/analysis/`, covered by `analysis/`, and `verification/*.png`, covered by `verification/**/*.png`).
 - `scripts/gen-presets-doc.mjs` now writes the generated Chinese preset reference to
   `docs/zh-CN/PRESETS.md` (the previous `studio/docs/` tree is gone); the English `docs/PRESETS.md` is
   hand-written and safe from regeneration.

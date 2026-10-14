@@ -1,11 +1,17 @@
-# scripts/*.ts 是唯一的源；同名 *.mjs 由 `npm run bundle`（rolldown）生成，不入库。
-# 下面这些是手写工具脚本（没有 .ts 源），必须入库。
-*.mjs
-!bundle.mjs
-!fetch-typst.mjs
-!start.mjs
-!pack.mjs
-!gen-presets-doc.mjs
-!check-presets.mjs
-!check-tcm.mjs
-!check-odrisk.mjs
+# studio/scripts/*.mjs 中，**有同名 .ts 源**的那 10 个是 `npm run bundle`（rolldown）的产物，不入库。
+#
+# 这里只列出产物本身，不用 "*.mjs + !白名单"：正向列表让"新增手写工具"默认进入版本控制，
+# 历史上 fetch-typst.mjs 就曾被取反规则静默忽略过一次。
+__zz_test.mjs
+_probe_bj3.mjs
+_probe_limits.mjs
+long-diag.mjs
+render-all.mjs
+stress-templates.mjs
+test-extremes.mjs
+test-gen.mjs
+test-qr.mjs
+test-variants.mjs
+
+# 没有 .ts 源的遗留打包产物：含原始样张标识，**绝不允许入库**（仅本机存在）。
+_bj3chk.mjs
