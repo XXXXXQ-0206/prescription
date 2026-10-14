@@ -7,6 +7,8 @@ English | [中文](README.zh-CN.md)
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6.svg)](https://www.typescriptlang.org/)
 [![Typst](https://img.shields.io/badge/Typst-0.15-239DAD.svg)](https://typst.app/)
+[![CI](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/ci.yml/badge.svg)](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/codeql.yml/badge.svg)](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/codeql.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 > A desktop application that generates hospital prescription sheets from a form, lays them out with
@@ -118,6 +120,23 @@ Everything is editable — the presets are starting points, not a controlled voc
 
 ---
 
+## Demo Data
+
+Everything published in this repository is **fictional demonstration data**:
+
+- **All patient and physician names, medical-record numbers, barcode numbers, prescription numbers and ID
+  numbers are invented.** They follow the format and length of the real documents the layouts were measured
+  from, so that the columns stay aligned, but they belong to nobody.
+- **Hospital names, and the public switchboard / clinical-pharmacist phone numbers** printed on the sheets, are
+  reproduced **for illustration only**, to identify which paper form a template recreates. They imply no
+  affiliation with, endorsement by, or cooperation with those institutions.
+- **The sample prescriptions exist to demonstrate the layout engine.** The screenshots, `prescription.typ`,
+  `prescription_scan_like.typ`, every per-template example document and the preset libraries (drug names,
+  specifications, prices, dosages, overdose-risk notes) are demo values; they may be incomplete or outdated and
+  must never be relied on clinically — see the [Disclaimer](#disclaimer).
+
+---
+
 ## Installation
 
 ### Prerequisites
@@ -135,17 +154,14 @@ git clone https://github.com/XXXXXQ-0206/prescription-master.git
 cd prescription-master
 ```
 
-### 2. Provide the Typst engine
+### 2. Get the Typst runtime
 
-Download the Typst CLI for Windows x64 (v0.15.x) from <https://github.com/typst/typst/releases> and place the
-binary at:
-
-```
-studio/resources/typst.exe
+```bash
+cd studio
+npm run fetch:typst      # downloads Typst 0.15.1 and unpacks resources/typst.exe
 ```
 
-The application looks for `resources/typst.exe` in development and for `typst.exe` next to the packaged
-resources in a build. It is deliberately ignored by Git: it is a 50 MB third-party binary.
+Manual alternatives and the proxy notes are in [Getting the Typst Runtime](#getting-the-typst-runtime).
 
 ### 3. Install dependencies and start
 
@@ -154,6 +170,38 @@ cd studio
 npm install
 npm start          # builds the renderer and launches the desktop app
 ```
+
+---
+
+## Getting the Typst Runtime
+
+The templates are compiled by the [Typst](https://typst.app/) CLI, which is **not vendored** in this repository
+(a 50 MB third-party binary, ignored by Git). One command fetches the pinned version:
+
+```bash
+cd studio
+npm run fetch:typst              # Typst 0.15.1 → studio/resources/typst.exe
+npm run fetch:typst -- --force   # re-download even if a binary is already there
+```
+
+The script is idempotent: when `resources/typst.exe` already reports `typst 0.15.1 (…)` it exits immediately
+without touching the network. It downloads the official `typst-x86_64-pc-windows-msvc.zip` asset of the pinned
+[Typst release](https://github.com/typst/typst/releases/tag/v0.15.1), unpacks `typst.exe` from it in pure
+JavaScript, and honours `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` (`TYPST_URL` can point at a mirror or an
+intranet copy).
+
+Without a network connection, either:
+
+- download `typst-x86_64-pc-windows-msvc.zip` from the
+  [Typst releases page](https://github.com/typst/typst/releases) and copy the `typst.exe` inside it to
+  `studio/resources/typst.exe`, or
+- download the plain `typst-0.15.1-windows-x64.exe` attached to
+  [this project's v1.0.0 release](https://github.com/XXXXXQ-0206/prescription-master/releases/tag/v1.0.0) and
+  save it as `studio/resources/typst.exe`.
+
+Verify with `studio/resources/typst.exe --version` — it must print `typst 0.15.1`. In development the
+application reads `resources/typst.exe`; in a packaged build it reads `typst.exe` from the application
+resources directory (`extraResources`).
 
 ---
 
@@ -179,10 +227,17 @@ npm start          # builds the renderer and launches the desktop app
 | `node scripts/render-all.mjs` | Render every template with its default data to `out/tpl-<id>.png` |
 | `node scripts/test-variants.mjs` | Compile all layout variants |
 | `node scripts/check-presets.mjs` | Assert the consistency of the preset libraries |
+| `node scripts/check-odrisk.mjs` | Assert the overdose-risk table (coverage, scope, duplicates) |
+| `node scripts/check-tcm.mjs` | Assert the traditional-medicine herb library |
+| `npm run bundle` | Bundle every `scripts/*.ts` entry point into `scripts/<name>.mjs` |
+| `npm run fetch:typst` | Download the pinned Typst runtime into `resources/` |
+| `npm test` | Bundle, then run the full local self-check suite (variants, extremes, generators, checks) |
 
-> **Note**: `scripts/*.mjs` files that have a `.ts` sibling are pre-bundled dev entry points. Regenerate one
-> after editing its source with
-> `npx esbuild scripts/<name>.ts --bundle --format=esm --platform=node --outfile=scripts/<name>.mjs '--alias:@=./src'`.
+> **Note**: a `scripts/<name>.mjs` that has a same-named `.ts` source is a **build product** (bundled with
+> [rolldown](https://rolldown.rs/)), not a source file, and it is not committed. Run `npm run bundle` once
+> after cloning — and after editing any `scripts/*.ts` — before invoking those entry points.
+> `npm run bundle -- <name>` rebuilds a single entry point, and `npm run bundle -- --check` only verifies
+> that the products exist and are up to date.
 
 ---
 
@@ -191,22 +246,35 @@ npm start          # builds the renderer and launches the desktop app
 ```bash
 cd studio
 
+# 0. Fetch the Typst runtime (once per clone)
+npm run fetch:typst
+
 # 1. Type-check (no emit)
 npx tsc --noEmit
 
-# 2. Build the renderer
+# 2. Bundle the dev entry points (scripts/*.ts → scripts/*.mjs)
+npm run bundle
+
+# 3. Build the renderer
 npm run build                 # → studio/dist
 
-# 3. Package the desktop application (NSIS installer + portable exe)
-npm run pack                  # → studio/release
+# 4. Package the desktop application
+npm run pack                  # → studio/release/PrescriptionMaster/
 ```
 
-`npm run pack` calls `scripts/pack.mjs`, which copies the Electron runtime and the application files and
-then invokes `electron-builder`. The packaged build expects `studio/resources/typst.exe` to exist, and the
-resulting installer/portable artifacts are written to `studio/release/` (ignored by Git).
+`npm run pack` calls `scripts/pack.mjs`, a dependency-free packager that copies the Electron runtime plus the
+application files into a **self-contained, relocatable folder** (`studio/release/PrescriptionMaster/`, ignored
+by Git), generates the launchers and smoke-tests the result. An NSIS installer / portable `.exe` can
+additionally be produced with `npx electron-builder --win`, which uses the `build` block in
+`studio/package.json` and picks up `resources/typst.exe` through `extraResources`. Both paths require
+`studio/resources/typst.exe` to exist.
 
 Packaging details, a portable-build smoke test and troubleshooting notes live in
-[`studio/docs/PACKAGING.md`](studio/docs/PACKAGING.md).
+[`docs/PACKAGING.md`](docs/PACKAGING.md); template authoring is documented in
+[`docs/TEMPLATES.md`](docs/TEMPLATES.md) and the preset libraries in [`docs/PRESETS.md`](docs/PRESETS.md).
+
+These are exactly the steps CI runs on every push to `main` and on every pull request — see
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ---
 
@@ -218,8 +286,12 @@ prescription-master/
 ├── README.zh-CN.md               # Chinese translation
 ├── LICENSE                       # MIT
 ├── CONTRIBUTING.md  SECURITY.md  CODE_OF_CONDUCT.md  CHANGELOG.md
-├── .github/                      # CI (CodeQL), Dependabot, issue & PR templates
+├── .github/                      # CI + CodeQL workflows, Dependabot, issue & PR templates
 ├── docs/
+│   ├── PACKAGING.md              # English reference: packaging and distribution
+│   ├── TEMPLATES.md              # English reference: template system
+│   ├── PRESETS.md                # English reference: preset libraries
+│   ├── zh-CN/                    # Chinese originals of the three references
 │   └── images/                   # screenshots used by the READMEs
 ├── prescription.typ              # vector Typst replica (clean electronic version)
 ├── prescription_scan_like.typ    # replica tuned to match the scan (paper noise, blur)
@@ -235,9 +307,9 @@ prescription-master/
     │   ├── lib/                  # doc.ts (model/defaults/validation), barcode.ts, qr.ts
     │   ├── styles/               # design tokens, theme, base, application CSS
     │   └── ui/                   # 15 primitives (button, input, select, switch, dialog, tooltip…)
-    ├── docs/                     # TEMPLATES.md, PRESETS.md, PACKAGING.md
-    ├── resources/                # icon.png / icon.ico (typst.exe is not committed)
-    └── scripts/                  # start / pack / render-all / test-* / check-* dev tooling
+    ├── resources/                # icon.png / icon.ico (typst.exe is fetched, never committed)
+    └── scripts/                  # start / pack / fetch-typst / render-all / test-* / check-*
+                                  # (*.mjs with a .ts sibling are rolldown build products)
 ```
 
 `refs/`, `origin_pic.png`, `analysis/` and `verification/**/*.png` exist only in a local working copy and are
@@ -250,7 +322,27 @@ Those scans, all crops derived from them, and the tooling that references their 
 from version control**. Every sample value that appears in the source code (patient name, record number,
 barcode number, prescription number, physician name) has been replaced with obviously fictional demo data of
 the same length and format, so the layouts are unchanged while the identifiers are not real. The
-`analysis/` and `verification/**/*.png` trees are local-only development evidence.
+`analysis/` and `verification/**/*.png` trees are local-only development evidence. See also
+[Demo Data](#demo-data) and [Security & Privacy](#security--privacy).
+
+---
+
+## Security & Privacy
+
+- **The application never connects to the network.** There is no update check, no telemetry, no analytics and
+  no crash reporting. The only outbound connection in the whole project is the developer-facing
+  `npm run fetch:typst` download; the application itself runs entirely offline against the bundled Typst
+  binary.
+- **Nothing is uploaded anywhere.** Prescription data does not leave the machine: the draft lives in the
+  renderer's `localStorage` and is written to disk only when *you* export a PDF / PNG / Typst file, save a JSON
+  file, or confirm an OS save dialog.
+- **The renderer is sandboxed**: `contextIsolation: true`, `nodeIntegration: false`, a `contextBridge`-only
+  preload API and a restrictive Content-Security-Policy — see [`studio/index.html`](studio/index.html) and
+  [`studio/electron/preload.cjs`](studio/electron/preload.cjs).
+- **Patient data never enters the repository.** Scans, crops, renders and machine-specific absolute paths are
+  excluded through `.gitignore`, and every committed sample value is fictional — see [Demo Data](#demo-data).
+
+To report a vulnerability, follow [`SECURITY.md`](SECURITY.md); please do **not** open a public issue.
 
 ---
 
@@ -291,8 +383,9 @@ Released under the [MIT License](LICENSE). © 2026 XXXXXQ-0206.
 No. It is a document generator. See the [Disclaimer](#disclaimer).
 
 **Why is `typst.exe` missing?**
-Because it is a 50 MB third-party binary that is not redistributed here. Download it from the
-[Typst releases page](https://github.com/typst/typst/releases) and place it at `studio/resources/typst.exe`.
+Because it is a 50 MB third-party binary that is not redistributed here. Run `npm run fetch:typst` (see
+[Getting the Typst Runtime](#getting-the-typst-runtime)) to download the pinned release into
+`studio/resources/typst.exe`.
 
 **The preview or the export fails with a typst error.**
 Check that `studio/resources/typst.exe` exists and that `typst --version` works. In a packaged build the
@@ -307,7 +400,7 @@ They are not in this repository, on purpose — they contain real patient data. 
 (`prescription.typ`, `prescription_scan_like.typ`) with fictional sample data are published.
 
 **How do I add another hospital?**
-Read [`studio/docs/TEMPLATES.md`](studio/docs/TEMPLATES.md): add a module under `studio/src/templates/`,
+Read [`docs/TEMPLATES.md`](docs/TEMPLATES.md): add a module under `studio/src/templates/`,
 export a `Template` object (`id`, `name`, `page`, `limits`, `sections`, `extraKeys`, `defaults`, `build`) and
 register it in `studio/src/templates/index.ts`. Then run `node scripts/render-all.mjs <id>` to check it.
 

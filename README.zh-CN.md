@@ -7,6 +7,8 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6.svg)](https://www.typescriptlang.org/)
 [![Typst](https://img.shields.io/badge/Typst-0.15-239DAD.svg)](https://typst.app/)
+[![CI](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/ci.yml/badge.svg)](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/codeql.yml/badge.svg)](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/codeql.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 > 一个桌面程序：填表生成医院处方单据，用 **Typst** 排版，导出 **PDF / PNG（300dpi）/ Typst 源码**，
@@ -112,6 +114,20 @@ Prescription Master 是一个 Electron 桌面程序，用来生成与多家医�
 
 ---
 
+## 演示数据
+
+本仓库发布的一切内容都是**虚构的演示数据**：
+
+- **全部患者与医师姓名、病历号、条码号、处方号、证件号都是虚构的**。它们与版式实测所用的真实单据保持
+  相同的格式与长度，以便列宽对齐，但不属于任何人。
+- **医院名称与单据上的公开总机／临床药师咨询电话仅作示意**，用于说明某个模板复刻的是哪一张纸质单据；
+  不代表与上述机构存在任何隶属、背书或合作关系。
+- **示例处方只用于演示排版引擎**：截图、`prescription.typ`、`prescription_scan_like.typ`、各模板的
+  示例数据，以及预设库（药品名、规格、价格、用法用量、过量风险提示）都是演示值，可能不完整或已过期，
+  **绝不可作为临床依据**——见[免责声明](#免责声明)。
+
+---
+
 ## 安装
 
 ### 环境要求
@@ -129,16 +145,14 @@ git clone https://github.com/XXXXXQ-0206/prescription-master.git
 cd prescription-master
 ```
 
-### 2. 准备 Typst 内核
+### 2. 获取 Typst 内核
 
-从 <https://github.com/typst/typst/releases> 下载 Windows x64 版 Typst CLI（0.15.x），放到：
-
+```bash
+cd studio
+npm run fetch:typst      # 下载 Typst 0.15.1 并解出 resources/typst.exe
 ```
-studio/resources/typst.exe
-```
 
-开发态程序读 `resources/typst.exe`，打包后读应用资源目录下的 `typst.exe`。该文件被 Git 忽略：
-它是 50MB 的第三方二进制。
+手动方案与代理说明见[获取 Typst 内核](#获取-typst-内核)。
 
 ### 3. 安装依赖并启动
 
@@ -147,6 +161,34 @@ cd studio
 npm install
 npm start          # 构建渲染层并启动桌面程序
 ```
+
+---
+
+## 获取 Typst 内核
+
+模板由 [Typst](https://typst.app/) 命令行内核编译，而该内核**不随仓库分发**（50MB 第三方二进制，已被
+Git 忽略）。一条命令即可取到固定版本：
+
+```bash
+cd studio
+npm run fetch:typst              # Typst 0.15.1 → studio/resources/typst.exe
+npm run fetch:typst -- --force   # 即使本地已有也重新下载
+```
+
+脚本是幂等的：若 `resources/typst.exe` 已能输出 `typst 0.15.1 (…)` 就直接退出，不联网。它会下载官方
+[Typst 0.15.1 Release](https://github.com/typst/typst/releases/tag/v0.15.1) 的
+`typst-x86_64-pc-windows-msvc.zip` 资源，用纯 JavaScript 解出 `typst.exe`，并自动读取
+`HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY`（`TYPST_URL` 可指向镜像或内网副本）。
+
+没有网络时二选一：
+
+- 从 [Typst releases](https://github.com/typst/typst/releases) 下载 `typst-x86_64-pc-windows-msvc.zip`，
+  把里面的 `typst.exe` 复制到 `studio/resources/typst.exe`；或
+- 下载[本项目 v1.0.0 Release](https://github.com/XXXXXQ-0206/prescription-master/releases/tag/v1.0.0) 附件中的
+  免解压 `typst-0.15.1-windows-x64.exe`，另存为 `studio/resources/typst.exe`。
+
+用 `studio/resources/typst.exe --version` 确认输出 `typst 0.15.1`。开发态程序读 `resources/typst.exe`；
+打包后读应用资源目录下的 `typst.exe`（`extraResources`）。
 
 ---
 
@@ -170,10 +212,15 @@ npm start          # 构建渲染层并启动桌面程序
 | `node scripts/render-all.mjs` | 按各模板默认数据渲染 `out/tpl-<id>.png` |
 | `node scripts/test-variants.mjs` | 编译全部版式变体 |
 | `node scripts/check-presets.mjs` | 断言预设库一致性 |
+| `node scripts/check-odrisk.mjs` | 断言过量风险表（覆盖、适用范围、重复项） |
+| `node scripts/check-tcm.mjs` | 断言中药库 |
+| `npm run bundle` | 把 `scripts/*.ts` 全部打成 `scripts/<name>.mjs` |
+| `npm run fetch:typst` | 下载固定版本的 Typst 内核到 `resources/` |
+| `npm test` | 先 bundle，再跑完整本地自检（变体、极值、生成器与各项 check） |
 
-> **说明**：`scripts/` 下与某个 `.ts` 同名的 `.mjs` 是预先打包好的开发入口；改完源码后用
-> `npx esbuild scripts/<name>.ts --bundle --format=esm --platform=node --outfile=scripts/<name>.mjs '--alias:@=./src'`
-> 重新打包。
+> **说明**：与某个 `.ts` 同名的 `scripts/<name>.mjs` 是**构建产物**（用 [rolldown](https://rolldown.rs/)
+> 打包），不是源码，不入库。clone 之后、以及每次改完 `scripts/*.ts`，先跑一次 `npm run bundle` 再执行这些
+> 入口；`npm run bundle -- <name>` 只重打一个，`npm run bundle -- --check` 只校验产物是否存在且最新。
 
 ---
 
@@ -182,20 +229,34 @@ npm start          # 构建渲染层并启动桌面程序
 ```bash
 cd studio
 
+# 0. 获取 Typst 内核（每个 clone 一次）
+npm run fetch:typst
+
 # 1. 类型检查（不产出文件）
 npx tsc --noEmit
 
-# 2. 构建渲染层
+# 2. 打包开发入口（scripts/*.ts → scripts/*.mjs）
+npm run bundle
+
+# 3. 构建渲染层
 npm run build                 # → studio/dist
 
-# 3. 打包桌面程序（NSIS 安装包 + 便携版 exe）
-npm run pack                  # → studio/release
+# 4. 打包桌面程序
+npm run pack                  # → studio/release/PrescriptionMaster/
 ```
 
-`npm run pack` 调用 `scripts/pack.mjs`：先复制 Electron 运行时与应用文件，再调用 `electron-builder`。
-打包要求 `studio/resources/typst.exe` 存在；安装包与便携版产物写入 `studio/release/`（已被 Git 忽略）。
+`npm run pack` 调用 `scripts/pack.mjs`：零新增依赖，把 Electron 运行时与应用文件复制成一个
+**自包含、可整目录搬走**的 `studio/release/PrescriptionMaster/`（已被 Git 忽略），生成启动器并做冒烟自检。
+需要 NSIS 安装包 / 便携版 exe 时，再跑 `npx electron-builder --win`：它读取 `studio/package.json` 的
+`build` 段，并通过 `extraResources` 带上 `resources/typst.exe`。两条路径都要求
+`studio/resources/typst.exe` 存在。
 
-打包细节、便携性验证与排错笔记见 [`studio/docs/PACKAGING.md`](studio/docs/PACKAGING.md)。
+打包细节、便携性验证与排错笔记见 [`docs/zh-CN/PACKAGING.md`](docs/zh-CN/PACKAGING.md)；模板开发见
+[`docs/zh-CN/TEMPLATES.md`](docs/zh-CN/TEMPLATES.md)，预设库见
+[`docs/zh-CN/PRESETS.md`](docs/zh-CN/PRESETS.md)。
+
+以上步骤与 CI 在每次 push 到 `main` 及每个 PR 上执行的一致——见
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml)。
 
 ---
 
@@ -207,8 +268,12 @@ prescription-master/
 ├── README.zh-CN.md               # 中文说明（本文件）
 ├── LICENSE                       # MIT
 ├── CONTRIBUTING.md  SECURITY.md  CODE_OF_CONDUCT.md  CHANGELOG.md
-├── .github/                      # CI（CodeQL）、Dependabot、issue 与 PR 模板
+├── .github/                      # CI + CodeQL 工作流、Dependabot、issue 与 PR 模板
 ├── docs/
+│   ├── PACKAGING.md              # 英文：打包与分发
+│   ├── TEMPLATES.md              # 英文：模板系统
+│   ├── PRESETS.md                # 英文：预设库
+│   ├── zh-CN/                    # 上述三份文档的中文原文
 │   └── images/                   # README 使用的截图
 ├── prescription.typ              # 复刻版 Typst（干净电子版）
 ├── prescription_scan_like.typ    # 复刻版 Typst（贴近扫描件：纸底噪点、印刷增益）
@@ -224,9 +289,9 @@ prescription-master/
     │   ├── lib/                  # doc.ts（数据模型/默认值/校验）、barcode.ts、qr.ts
     │   ├── styles/               # design token、主题、基线与应用层 CSS
     │   └── ui/                   # 15 个基础件（button、input、select、switch、dialog、tooltip…）
-    ├── docs/                     # TEMPLATES.md、PRESETS.md、PACKAGING.md
-    ├── resources/                # icon.png / icon.ico（typst.exe 不入库）
-    └── scripts/                  # start / pack / render-all / test-* / check-* 开发工具
+    ├── resources/                # icon.png / icon.ico（typst.exe 由脚本获取，不入库）
+    └── scripts/                  # start / pack / fetch-typst / render-all / test-* / check-* 开发工具
+                                  # （与 .ts 同名的 .mjs 是 rolldown 构建产物）
 ```
 
 `refs/`、`origin_pic.png`、`analysis/`、`verification/**/*.png` 只存在于本地工作副本，已被 Git 忽略。
@@ -236,7 +301,23 @@ prescription-master/
 版式测量自含真实患者姓名与病历号的处方扫描件。这些扫描件、由它们裁切出的图片，以及引用其绝对路径的工具
 **都不进版本控制**。源码里出现的每一个示例值（患者姓名、病历号、条码号、处方号、医师姓名）都已替换成
 **等长同格式的虚构演示数据**：版式不变，标识不再真实。`analysis/` 与 `verification/**/*.png` 是仅本地保留的
-开发证据。
+开发证据。另见[演示数据](#演示数据)与[安全与隐私](#安全与隐私)。
+
+---
+
+## 安全与隐私
+
+- **程序不联网。** 没有更新检查、没有遥测、没有统计、没有崩溃上报；整个项目里唯一的外连是面向开发者的
+  `npm run fetch:typst` 下载，程序本身始终离线运行内置的 Typst 内核。
+- **不上传任何数据。** 处方数据不离开本机：草稿存在渲染层的 `localStorage`，只有在你导出 PDF / PNG /
+  Typst、保存 JSON，或在系统保存对话框里确认时才会写盘。
+- **渲染层是沙箱化的**：`contextIsolation: true`、`nodeIntegration: false`、只通过 `contextBridge`
+  暴露接口，并启用严格的 Content-Security-Policy——见 [`studio/index.html`](studio/index.html) 与
+  [`studio/electron/preload.cjs`](studio/electron/preload.cjs)。
+- **患者数据不进仓库。** 扫描件、裁切图、渲染结果与本机绝对路径都由 `.gitignore` 排除，入库的示例值全部
+  虚构——见[演示数据](#演示数据)。
+
+漏洞上报请按 [`SECURITY.md`](SECURITY.md) 私下进行，**不要**开公开 Issue。
 
 ---
 
@@ -276,8 +357,8 @@ prescription-master/
 不是。它只是一个单据生成器。请见[免责声明](#免责声明)。
 
 **为什么仓库里没有 `typst.exe`？**
-它是 50MB 的第三方二进制，本项目不再分发。请从 [Typst releases](https://github.com/typst/typst/releases)
-下载后放到 `studio/resources/typst.exe`。
+它是 50MB 的第三方二进制，本项目不再分发。跑一次 `npm run fetch:typst` 即可
+（见[获取 Typst 内核](#获取-typst-内核)），它会下载固定版本到 `studio/resources/typst.exe`。
 
 **预览或导出报 typst 错误怎么办？**
 先确认 `studio/resources/typst.exe` 存在且 `typst --version` 能跑通；打包版要求该二进制位于应用资源目录下。
@@ -291,7 +372,7 @@ Electron 外壳本身跨平台，但版式是按 Windows 字体（SimSun、Arial
 （`prescription.typ`、`prescription_scan_like.typ`）。
 
 **怎么加一家新医院？**
-读 [`studio/docs/TEMPLATES.md`](studio/docs/TEMPLATES.md)：在 `studio/src/templates/` 下新建模块，导出 `Template`
+读 [`docs/zh-CN/TEMPLATES.md`](docs/zh-CN/TEMPLATES.md)：在 `studio/src/templates/` 下新建模块，导出 `Template`
 对象（`id`、`name`、`page`、`limits`、`sections`、`extraKeys`、`defaults`、`build`），并在
 `studio/src/templates/index.ts` 注册；然后用 `node scripts/render-all.mjs <id>` 检查版面。
 

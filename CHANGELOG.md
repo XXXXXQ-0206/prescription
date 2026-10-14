@@ -7,6 +7,46 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- **CI workflow** — [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to `main` and on
+  every pull request: `windows-latest` with Node 22 (the version Electron 43 bundles), npm caching and
+  `working-directory: studio`. Steps: `npm ci` → `npx tsc --noEmit` → `npm run bundle` → `npm run build` →
+  `node scripts/fetch-typst.mjs` → `render-all` → `test-variants` → `check-presets` → `check-odrisk` →
+  `check-tcm`. Least-privilege `contents: read`, a concurrency group that cancels superseded runs, and a
+  guard that fails the build if a build product (`*.mjs` with a `.ts` source, or any `*.exe`) is committed.
+- **`npm run fetch:typst`** — reproducible acquisition of the pinned Typst 0.15.1 runtime
+  (`scripts/fetch-typst.mjs`): idempotent (skips when the local binary already reports 0.15.1), `--force` to
+  re-download, honours `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY`, unpacks the official
+  `typst-x86_64-pc-windows-msvc.zip` in pure JavaScript, and prints actionable manual instructions —
+  including the ready-made `.exe` attached to the v1.0.0 release — when the download cannot be completed.
+- **`npm run bundle`** — `scripts/bundle.mjs` bundles every `scripts/*.ts` entry point into
+  `scripts/<name>.mjs` with the project's existing rolldown, incrementally, with `--force`,
+  single-entry and CI-friendly `--check` modes.
+- **Bilingual documentation** — the three in-depth references now have a usable English edition in
+  `docs/` (`PACKAGING.md`, `TEMPLATES.md`, `PRESETS.md`) beside their Chinese originals in `docs/zh-CN/`,
+  and both READMEs gained *Demo Data*, *Getting the Typst Runtime* and *Security & Privacy* sections plus CI
+  and CodeQL badges.
+
+### Changed
+
+- **Build products are no longer committed.** The ten `studio/scripts/*.mjs` files that have a `.ts` source
+  are rolldown output: they are now ignored through `studio/scripts/.gitignore` and rebuilt with
+  `npm run bundle` after a clone (or after editing a source). The hand-written `.mjs` tools remain tracked.
+- `rolldown` is declared as an explicit devDependency instead of relying on the copy that Vite happens to
+  hoist, and `studio/package-lock.json` is kept in sync for `npm ci`.
+- `scripts/gen-presets-doc.mjs` now writes the generated Chinese preset reference to
+  `docs/zh-CN/PRESETS.md` (the previous `studio/docs/` tree is gone); the English `docs/PRESETS.md` is
+  hand-written and safe from regeneration.
+- `studio/README.md` was refreshed (it still listed the pre-1.0 preset counts and a removed documentation
+  path), and `CONTRIBUTING.md` now points at the new documentation layout and describes `npm run bundle`
+  instead of the retired esbuild command.
+
+### Security
+
+- **The repository is public**, with CodeQL code scanning, secret scanning and push protection, and
+  Dependabot updates for both npm (`/studio`) and GitHub Actions enabled.
+
 ### Planned
 
 - Template plugin API and a template scaffold command.

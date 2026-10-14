@@ -3,7 +3,7 @@
 把 **Prescription Master**（`studio`）打包成一个**免安装目录**：拷到任意 64 位 Windows 机器上，双击一个 `.bat` 就能运行，不需要装 Node.js、npm、.NET 或任何运行库。
 
 - 打包脚本：[`scripts/pack.mjs`](../scripts/pack.mjs)
-- 产物目录：`studio/release/PrescriptionStudio/`
+- 产物目录：`studio/release/PrescriptionMaster/`
 - 产物里自带一份面向最终用户的 `README-使用说明.txt`
 
 > 本文档中的命令与输出均为**本机实际执行**的真实结果（Windows + Node v22.23.2 + Electron 43.7.9 + Typst 0.15.1）。
@@ -25,13 +25,13 @@ node scripts/pack.mjs --build
 npm run pack
 ```
 
-跑完后，**要分发的东西就是 `studio/release/PrescriptionStudio` 这一个目录**，整个拷走即可。
+跑完后，**要分发的东西就是 `studio/release/PrescriptionMaster` 这一个目录**，整个拷走即可。
 
 ### 实测输出
 
 ```
 [pack] studio 根目录: <repo>/studio
-[pack] 产物目录: <repo>/studio/release/PrescriptionStudio
+[pack] 产物目录: <repo>/studio/release/PrescriptionMaster
 [pack] ELECTRON_RUN_AS_NODE 当前值 = "1" （打包/验证时会清掉）
 [pack] 复制 Electron 运行时（约 300+ MB，请稍候）...
 [pack]   Electron 复制完成 0.2s
@@ -52,10 +52,10 @@ npm run pack
 [pack]    electron.exe --version → v43.7.9
 [pack]    ✔ 运行时自检通过（Electron v43.7.9）
 [pack]    electron.exe <app> --shot → exit 0  (5.3s)
-[pack]    stdout: SHOT_SAVED ...\PrescriptionStudio\app\shot.png
-[pack]    ✔ 截图已生成: ...\PrescriptionStudio\app\shot.png  0.1 MB
+[pack]    stdout: SHOT_SAVED ...\PrescriptionMaster\app\shot.png
+[pack]    ✔ 截图已生成: ...\PrescriptionMaster\app\shot.png  0.1 MB
 
-[pack] 完成。分发时把整个 PrescriptionStudio 目录拷走即可。
+[pack] 完成。分发时把整个 PrescriptionMaster 目录拷走即可。
 ```
 
 > 复制耗时 `0.2s` 是**操作系统文件缓存命中**的结果（同一份 Electron 刚被读过）。冷启动首次打包大约几十秒到一两分钟，属正常，无需优化。
@@ -86,7 +86,7 @@ npm run pack
 ## 2. 产物结构
 
 ```
-studio/release/PrescriptionStudio/
+studio/release/PrescriptionMaster/
 ├── electron.exe                 ← Electron 43.7.9 运行时（主程序，229 MB）
 ├── *.dll, *.pak, icudtl.dat      Chromium / GPU / 多媒体依赖
 ├── locales/                     55 个语言包
@@ -117,7 +117,7 @@ studio/release/PrescriptionStudio/
 
 ### 3.1 双击（推荐给最终用户）
 
-双击 `PrescriptionStudio\Prescription Master.bat`。核心两行：
+双击 `PrescriptionMaster\Prescription Master.bat`。核心两行：
 
 ```bat
 set ELECTRON_RUN_AS_NODE=
@@ -239,7 +239,7 @@ TypeError: Cannot read properties of undefined (reading 'whenReady')
 PS> node scripts/pack.mjs
 ... （见第 1 节完整输出）
 [pack] ✔ 运行时自检通过（Electron v43.7.9）
-[pack] ✔ 截图已生成: ...\PrescriptionStudio\app\shot.png
+[pack] ✔ 截图已生成: ...\PrescriptionMaster\app\shot.png
 ```
 
 退出码 **0**。
@@ -248,7 +248,7 @@ PS> node scripts/pack.mjs
 
 ```
 electron.exe <app> --shot → exit 0  (5.3s)
-stdout: SHOT_SAVED ...\PrescriptionStudio\app\shot.png
+stdout: SHOT_SAVED ...\PrescriptionMaster\app\shot.png
 ```
 
 截图 1860×1230，界面完整（左侧表单、右侧 Typst 预览、顶部工具栏），标题栏显示 `Typst 0.15.1 (9dfd3a08) · SimSun 排版`，状态栏显示 `渲染 633 ms · 矢量 SVG · 导出为 PDF/PNG 为 300dpi`、`版式校验通过`。
@@ -269,8 +269,8 @@ svg: OK 348581 bytes -> out/selftest.svg
 把产物**整体复制到另一个干净的 ASCII 路径**（如 `D:\portable_test\`），并且在**带有 `ELECTRON_RUN_AS_NODE=1` 的 shell** 里通过 `.bat` 启动：
 
 ```powershell
-PS> Copy-Item <产物> D:\portable_test\PrescriptionStudio -Recurse   # 87 个文件 / 431 MB
-PS> cd D:\portable_test\PrescriptionStudio
+PS> Copy-Item <产物> D:\portable_test\PrescriptionMaster -Recurse   # 87 个文件 / 431 MB
+PS> cd D:\portable_test\PrescriptionMaster
 PS> cmd /c Prescription Master.bat        # 该 shell 中 $env:ELECTRON_RUN_AS_NODE = 1
 PS> Get-Process electron | Select Id,MainWindowTitle
    Id ProcessName MainWindowTitle
@@ -283,7 +283,7 @@ PS> Get-Process electron | Select Id,MainWindowTitle
 
 ```
 PS> cmd /c 自检截图.bat
-SHOT_SAVED ...\PrescriptionStudio\app\shot.png
+SHOT_SAVED ...\PrescriptionMaster\app\shot.png
 exit=0
 ```
 
@@ -319,7 +319,7 @@ Electron 用系统字体渲染。精简版 Windows 或缺少中文字体（SimSu
 
 ### Q5. 杀软 / SmartScreen 拦截
 未签名的 `electron.exe` 常被误报（中文名 `.bat` 也容易触发脚本启发式扫描）：
-- 把整个 `PrescriptionStudio` 目录加入杀软排除项。
+- 把整个 `PrescriptionMaster` 目录加入杀软排除项。
 - SmartScreen 提示 →「更多信息」→「仍要运行」。
 - 正式对外分发建议用 `signtool` 对 `electron.exe` 做代码签名，或改用 Inno Setup / NSIS 打成安装包。
 
