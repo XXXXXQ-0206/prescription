@@ -562,7 +562,7 @@ reference, so regenerating it is always safe.
 - [docs/zh-CN/PRESETS.md](zh-CN/PRESETS.md) — the complete generated Chinese listings
 - [TEMPLATES.md](TEMPLATES.md) — the template system, per-template limits and extended fields
 - [PACKAGING.md](PACKAGING.md) — building and shipping the desktop application
-- [README.md](../README.md) / [README.zh-CN.md](../README.zh-CN.md) — project overview
+- [README.md](../README.md) — project overview
 - Source of truth: [`studio/src/data/presets.ts`](../studio/src/data/presets.ts)
 - Checks and tooling: [`check-presets.mjs`](../studio/scripts/check-presets.mjs),
   [`check-odrisk.mjs`](../studio/scripts/check-odrisk.mjs),

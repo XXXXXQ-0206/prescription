@@ -25,7 +25,7 @@ agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
 - Report a bug or a layout deviation (see the issue templates).
 - Improve a template's geometry, field set or validation.
 - Add or fix preset data (diagnoses, drugs, regimens) — with fictional, verifiable demo values.
-- Improve the documentation, the READMEs, or add a translation.
+- Improve the documentation, the README, or add a translation.
 - Review pull requests and triage issues.
 
 ## Reporting bugs
@@ -167,8 +167,8 @@ npm run bundle -- --check         # verify only, write nothing (used by CI)
 
 ## Documentation and translations
 
-- `README.md` is the English reference; `README.zh-CN.md` must stay a faithful translation with the same
-  section structure. If you change one, change the other in the same pull request.
+- `README.md` is the public project documentation and is written in English. Keep it in sync with the code
+  and with the in-depth references under `docs/` in the same pull request.
 - `docs/` holds the in-depth English references (`TEMPLATES.md`, `PRESETS.md`, `PACKAGING.md`) and
   `docs/zh-CN/` their Chinese originals. Keep both languages in sync.
 - `docs/zh-CN/PRESETS.md` is generated: run `node scripts/gen-presets-doc.mjs` from `studio/` after changing
