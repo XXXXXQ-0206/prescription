@@ -348,3 +348,31 @@ Electron 用系统字体渲染。精简版 Windows 或缺少中文字体（SimSu
 - [ ] 在目标机器完整复制目录后，双击 `Prescription Master.bat`，窗口出现
 - [ ] 目标机器上试一次 PDF 导出
 - [ ] 必要时为目录配置杀软白名单
+
+---
+
+## 9. 如何发版（`.github/workflows/release.yml`）
+
+发版流程**只能手动触发**（`workflow_dispatch`）：推 tag、合并 PR 都不会发布任何东西。
+
+1. **先跑 dry-run**：*Actions* → *Release* → *Run workflow*，选要发布的提交（通常是 `main`），填：
+   - `tag`：本次要发布的版本号，例如 `v1.0.1`；
+   - `dry_run`：`true`（默认）—— 完整构建、在 job summary 打印 SHA-256、把产物上传成 workflow artifact，
+     **绝不创建或修改 Release**；
+   - `prerelease`：不是预发布就保持 `false`。
+2. **检查这次运行**：`npm ci` → `npm run bundle` → `npm run build` → `node scripts/fetch-typst.mjs` →
+   `node scripts/render-all.mjs` → `npx electron-builder --win --x64` → 生成 `SHA256SUMS.txt`。
+   把 artifact 下载下来，先跑一遍免安装版冒烟。
+3. **正式发布**：再触发一次并把 `dry_run` 设为 `false`。只有 `publish` job 拿到 `contents: write`：
+   它在**被触发的那个提交**上创建 Release（`gh release create --target <sha>`）；
+   若该 Release 已存在，则改为上传/覆盖附件（`gh release upload --clobber`）。
+4. **收尾**：核对附件，并把 `CHANGELOG.md` 的 `[Unreleased]` 条目归入新版本。
+
+### 注意事项
+
+- **产物没有代码签名**：没有配置证书，Windows SmartScreen 与部分杀软会提示"未知发布者"。每个 Release 都会
+  附带 `SHA256SUMS.txt` 供用户核验（`Get-FileHash .\Prescription-Master-Setup-<版本>.exe -Algorithm SHA256`
+  或 `certutil -hashfile <文件> SHA256`）。根治办法是申请代码签名证书。
+- **产物一律由 CI 从被触发的提交构建**，这是可复现性的来源；不要手工上传本机构建的二进制（除非同时公布校验值）。
+- CI **不会静默安装** NSIS 安装包（需要一次性虚拟机）；冒烟测试请用免安装版。
+- 打包步骤设置了 `CSC_IDENTITY_AUTO_DISCOVERY: "false"`，避免缺少证书导致构建中途失败。

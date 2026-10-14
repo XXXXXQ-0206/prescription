@@ -20,9 +20,7 @@ tmp/
 refs/
 origin_pic.png
 analysis/
-studio/analysis/
 verification/**/*.png
-verification/*.png
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  Generated / local artifacts (bundles, renders, installers, documents)
@@ -36,8 +34,9 @@ prescription_2x.png
 shot.png
 *.local
 
-# studio/scripts/*.mjs 是 `npm run bundle` 的产物，忽略规则放在 studio/scripts/.gitignore
-# （那里保留了 bundle.mjs / start.mjs / pack.mjs 等手写工具脚本）。
+# studio/scripts/*.mjs 的忽略规则放在 studio/scripts/.gitignore：那里**正向列出** 10 个
+# 由 `npm run bundle` 生成的产物，其余 .mjs（bundle / fetch-typst / start / pack / check-* …）
+# 都是手写工具，必须入库。
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  Python bytecode cache (verification tooling)

@@ -13,7 +13,6 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "types": ["node"],
-    "baseUrl": ".",
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src", "vite.config.ts"]
