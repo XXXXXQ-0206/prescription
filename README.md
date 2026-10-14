@@ -1,7 +1,5 @@
 # Prescription Master
 
-English | [中文](README.zh-CN.md)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Electron](https://img.shields.io/badge/Electron-43-47848F.svg)](https://www.electronjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
@@ -286,8 +284,7 @@ These are exactly the steps CI runs on every push to `main` and on every pull re
 
 ```
 prescription-master/
-├── README.md                     # this file (English)
-├── README.zh-CN.md               # Chinese translation
+├── README.md                     # this file
 ├── LICENSE                       # MIT
 ├── CONTRIBUTING.md  SECURITY.md  CODE_OF_CONDUCT.md  CHANGELOG.md
 ├── .github/                      # CI + CodeQL workflows, Dependabot, issue & PR templates
@@ -296,7 +293,7 @@ prescription-master/
 │   ├── TEMPLATES.md              # English reference: template system
 │   ├── PRESETS.md                # English reference: preset libraries
 │   ├── zh-CN/                    # Chinese originals of the three references
-│   └── images/                   # screenshots used by the READMEs
+│   └── images/                   # screenshots used by the README
 ├── prescription.typ              # vector Typst replica (clean electronic version)
 ├── prescription_scan_like.typ    # replica tuned to match the scan (paper noise, blur)
 └── studio/

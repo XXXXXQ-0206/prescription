@@ -395,7 +395,7 @@ Related checks: `npm run test:gen` (generator smoke test), `npm run test:qr`, `n
 
 - Open the selector in `npm run dev`, switch to your template and confirm the title bar shows the expected
   `<w>×<h>pt`; click through every `extraKeys` input.
-- Add the template row to the table in [README.md](../README.md) and [README.zh-CN.md](../README.zh-CN.md).
+- Add the template row to the table in [README.md](../README.md).
 - If you publish a preview, add the rendered PNG under [`docs/images/`](images/).
 
 ### Checklist
@@ -517,4 +517,3 @@ same pattern in new templates so an incomplete form still produces a printable s
 | [`docs/PRESETS.md`](PRESETS.md) | Preset libraries (hospitals, departments, drugs, herbs, regimens) |
 | [`docs/zh-CN/TEMPLATES.md`](zh-CN/TEMPLATES.md) | Chinese original of this document |
 | [`README.md`](../README.md) | Project overview, feature list, template table |
-| [`README.zh-CN.md`](../README.zh-CN.md) | Chinese README |

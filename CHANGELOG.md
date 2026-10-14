@@ -25,9 +25,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **`npm run bundle`** — `scripts/bundle.mjs` bundles every `scripts/*.ts` entry point into
   `scripts/<name>.mjs` with the project's existing rolldown, incrementally, with `--force`,
   single-entry and CI-friendly `--check` modes.
-- **Bilingual documentation** — the three in-depth references now have a usable English edition in
+- **English documentation** — the three in-depth references now have a usable English edition in
   `docs/` (`PACKAGING.md`, `TEMPLATES.md`, `PRESETS.md`) beside their Chinese originals in `docs/zh-CN/`,
-  and both READMEs gained *Demo Data*, *Getting the Typst Runtime* and *Security & Privacy* sections plus CI
+  and the README gained *Demo Data*, *Getting the Typst Runtime* and *Security & Privacy* sections plus CI
   and CodeQL badges.
 - **Manual release pipeline** — [`.github/workflows/release.yml`](.github/workflows/release.yml) is
   `workflow_dispatch`-only and defaults to `dry_run: true`, which builds the Windows installer and portable
@@ -57,6 +57,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `studio/README.md` was refreshed (it still listed the pre-1.0 preset counts and a removed documentation
   path), and `CONTRIBUTING.md` now points at the new documentation layout and describes `npm run bundle`
   instead of the retired esbuild command.
+
+### Removed
+
+- Removed `README.zh-CN.md`; public documentation is now English-only.
 
 ### Security
 
