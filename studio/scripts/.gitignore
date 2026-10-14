@@ -1,0 +1,11 @@
+# scripts/*.ts 是唯一的源；同名 *.mjs 由 `npm run bundle`（rolldown）生成，不入库。
+# 下面这些是手写工具脚本（没有 .ts 源），必须入库。
+*.mjs
+!bundle.mjs
+!fetch-typst.mjs
+!start.mjs
+!pack.mjs
+!gen-presets-doc.mjs
+!check-presets.mjs
+!check-tcm.mjs
+!check-odrisk.mjs

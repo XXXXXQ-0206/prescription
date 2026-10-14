@@ -8,12 +8,25 @@
   "main": "electron/main.mjs",
   "scripts": {
     "dev": "node scripts/start.mjs --dev",
+    "dev:vite": "vite",
     "build": "vite build",
-    "electron": "electron .",
     "start": "node scripts/start.mjs",
     "shot": "node scripts/start.mjs --shot",
+    "electron": "electron .",
     "pack": "node scripts/pack.mjs",
-    "dev:vite": "vite"
+    "bundle": "node scripts/bundle.mjs",
+    "fetch:typst": "node scripts/fetch-typst.mjs",
+    "render": "npm run bundle && node scripts/render-all.mjs",
+    "diag:long": "npm run bundle && node scripts/long-diag.mjs",
+    "stress": "npm run bundle && node scripts/stress-templates.mjs",
+    "test": "npm run bundle && node scripts/test-variants.mjs && node scripts/test-extremes.mjs && node scripts/test-gen.mjs && node scripts/check-presets.mjs && node scripts/check-tcm.mjs && node scripts/check-odrisk.mjs",
+    "test:variants": "npm run bundle && node scripts/test-variants.mjs",
+    "test:extremes": "npm run bundle && node scripts/test-extremes.mjs",
+    "test:gen": "npm run bundle && node scripts/test-gen.mjs",
+    "test:qr": "npm run bundle && node scripts/test-qr.mjs",
+    "check:presets": "npm run bundle && node scripts/check-presets.mjs",
+    "check:tcm": "npm run bundle && node scripts/check-tcm.mjs",
+    "check:odrisk": "npm run bundle && node scripts/check-odrisk.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -33,6 +46,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "electron": "^43.1.0",
     "electron-builder": "^26.15.3",
+    "rolldown": "^1.2.13",
     "tailwindcss": "^4.3.3",
     "typescript": "~5.9.3",
     "vite": "^8.3.4"

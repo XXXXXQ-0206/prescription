@@ -36,8 +36,8 @@ prescription_2x.png
 shot.png
 *.local
 
-# Orphan esbuild bundle with no .ts source (contains original sample identifiers)
-studio/scripts/_bj3chk.mjs
+# studio/scripts/*.mjs 是 `npm run bundle` 的产物，忽略规则放在 studio/scripts/.gitignore
+# （那里保留了 bundle.mjs / start.mjs / pack.mjs 等手写工具脚本）。
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  Python bytecode cache (verification tooling)
