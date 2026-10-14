@@ -1,0 +1,98 @@
+name: CI
+
+# Type-check, bundling, renderer build and the in-tree self-check scripts on every
+# change to main and on every pull request.
+#
+# windows-latest + Node 22 mirror the shipped runtime (Electron 43 bundles Node 22),
+# and the renderer/packaging path is Windows-only, so the self-checks must run there.
+#
+# Known limitation: GitHub's Windows images do not ship SimSun/SimHei, the CJK fonts
+# the templates are measured against. Typst still compiles (it reports
+# "unknown font family" as a warning and falls back), so these steps prove the whole
+# pipeline end to end - template source -> Typst source -> PDF/PNG - but *not* pixel
+# fidelity of the Chinese glyphs. Layout fidelity is verified locally on Windows with
+# the real fonts installed; see docs/PACKAGING.md.
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+# Least privilege: this workflow only reads the repository.
+permissions:
+  contents: read
+
+# A new push to the same ref supersedes the run that is still in flight.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: studio
+
+jobs:
+  verify:
+    name: Verify (windows-latest, Node 22)
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      # Guards the "build products are not committed" policy: a *.mjs that has a
+      # same-named *.ts source is a rolldown artifact (npm run bundle) and must stay
+      # untracked, as must the Typst runtime (*.exe).
+      - name: Guard - no build products committed
+        working-directory: .
+        shell: pwsh
+        run: |
+          $tracked = @(git ls-files "studio/scripts/*.mjs")
+          $artifacts = @($tracked | Where-Object { Test-Path ([System.IO.Path]::ChangeExtension($_, ".ts")) })
+          $binaries = @(git ls-files "*.exe")
+          $offenders = $artifacts + $binaries
+          if ($offenders.Count -gt 0) {
+            Write-Host "::error::These build products must not be committed:"
+            $offenders | ForEach-Object { Write-Host "  $_" }
+            Write-Host "Run: git rm --cached <file>  (the files stay on disk)"
+            exit 1
+          }
+          Write-Host "OK: no bundled *.mjs and no *.exe are tracked."
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Bundle self-check scripts (scripts/*.ts -> scripts/*.mjs)
+        run: npm run bundle
+
+      - name: Build renderer
+        run: npm run build
+
+      - name: Fetch the Typst runtime
+        run: node scripts/fetch-typst.mjs
+
+      - name: Render all five templates
+        run: node scripts/render-all.mjs
+
+      - name: Variant matrix
+        run: node scripts/test-variants.mjs
+
+      - name: Preset consistency
+        run: node scripts/check-presets.mjs
+
+      - name: Overdose-risk table
+        run: node scripts/check-odrisk.mjs
+
+      - name: TCM template
+        run: node scripts/check-tcm.mjs
