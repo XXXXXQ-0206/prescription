@@ -308,9 +308,16 @@ function asciiQr(mat: boolean[][]): string {
 }
 
 function runPython(script: string, args: string[], label: string): void {
-  const file = path.join(os.tmpdir(), "qr-verify-" + label + "-" + process.pid + ".py");
-  fs.writeFileSync(file, script, "utf8");
-  const res = spawnSync(PYTHON, [file, ...args], { stdio: ["ignore", "inherit", "inherit"] });
+  // Unique, private directory per invocation: never write to a predictable name in os.tmpdir().
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "pm-qr-verify-"));
+  const file = path.join(dir, "verify.py");
+  let res: ReturnType<typeof spawnSync>;
+  try {
+    fs.writeFileSync(file, script, "utf8");
+    res = spawnSync(PYTHON, [file, ...args], { stdio: ["ignore", "inherit", "inherit"] });
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
   if (res.error) {
     console.error("");
     console.error("无法执行 " + PYTHON + "：" + res.error.message);

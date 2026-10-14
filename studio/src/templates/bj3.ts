@@ -1,5 +1,5 @@
 import type { PrescriptionDoc } from "@/lib/doc";
-import { BARCODE_HELPER, barcodeBlock, esc as kitEsc, money, preamble, ruleLine, total, tw } from "@/templates/kit";
+import { BARCODE_HELPER, barcodeBlock, money, preamble, ruleLine, total, tw } from "@/templates/kit";
 import type { Template } from "@/templates/types";
 
 /**
@@ -101,9 +101,17 @@ const S = {
 /** 最多打印几条药品 */
 const MAX_DRUGS_PRINT = 6;
 
-/** Typst 字符串转义：反斜杠、引号、内容块方括号、引用符 @ */
+/**
+ * Typst 字符串转义：**先反斜杠，再引号，最后方括号与引用符 @**。
+ * 顺序不能调换，否则会二次转义刚补上的反斜杠；与 kit 的 `esc()` 前两步一致，内联以保证转义链自包含。
+ */
 const esc = (s: string) =>
-  kitEsc(s).replace(/\[/g, "\\[").replace(/\]/g, "\\]").replace(/(^|[^\w])@/g, "$1\\@");
+  String(s ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\[/g, "\\[")
+    .replace(/\]/g, "\\]")
+    .replace(/(^|[^\w])@/g, "$1\\@");
 
 /** 数值：两位小数去掉无意义尾零（51.64 → 51.64，1.00 → 1） */
 const num = (v: number, d = 2) => {

@@ -254,7 +254,6 @@ export function FormPanel({ doc, patch, setDoc, editingCard, onEditCard, onDoneC
   const setOpt = (p: Partial<PrescriptionDoc["options"]>) => patch({ options: { ...o, ...p } });
   const setExtra = (p: Partial<PrescriptionDoc["extra"]>) => patch({ extra: { ...doc.extra, ...p } });
 
-  const feeLabel = FEE_TYPES.find((f) => f.key === doc.feeKey)?.label ?? doc.feeKey;
   const genderText = doc.gender || "—";
 
   /** 单选短选择：编辑态行内分段，只读态只显示值 */

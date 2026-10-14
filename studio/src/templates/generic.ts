@@ -5,7 +5,7 @@
  */
 import type { PrescriptionDoc } from "@/lib/doc";
 import { totalOf } from "@/lib/doc";
-import { BARCODE_HELPER, QR_HELPER, barcodeBlock, circled, esc, money, preamble, qrBlock, trim } from "@/templates/kit";
+import { BARCODE_HELPER, QR_HELPER, barcodeBlock, esc, money, preamble, trim } from "@/templates/kit";
 
 export interface SimpleOpts {
   widthPt: number;

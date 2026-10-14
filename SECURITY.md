@@ -63,6 +63,27 @@ Out of scope:
 - Findings produced only by automated scanners without a demonstrated impact.
 - Social engineering and denial-of-service by resource exhaustion on a local desktop application.
 
+## Known issues
+
+### `sprintf-js` denial of service — dev-only, no upstream fix (reviewed 2026-10-14)
+
+Dependabot reports [GHSA-hp3w-g68c-fv3c](https://github.com/advisories/GHSA-hp3w-g68c-fv3c) (medium):
+*sprintf-js vulnerable to denial of service through unbounded precision specifiers*, affecting
+`sprintf-js@1.1.3` with **no patched version available**.
+
+- **Where it comes from** — `electron-builder` → `app-builder-lib` → `@electron/get@3` → `global-agent` →
+  `roarr` → `sprintf-js`. Every link is a **devDependency** used only while producing the Windows installer.
+  It is not part of the renderer bundle, is not shipped inside the installer or the portable build, and is
+  never reachable at application runtime.
+- **Why it is not fixed yet** — the advisory has no fixed release. The only way to drop the package is to force
+  `@electron/get` to a major version its parent does not support (`app-builder-lib@26` requires `^3.0.0`):
+  `@electron/get@4+` is ESM-only and needs Node ≥ 22.12, while this project supports Node 20 for building, so
+  the override would trade a dormant dev-only advisory for a real build breakage for those users.
+- **Compensating controls** — `node_modules` is never packaged; release binaries are built from a reviewed
+  commit and published with SHA-256 checksums; no runtime code parses attacker-controlled format strings.
+- **Next review** — when `electron-builder` moves to `@electron/get@4+`, revisit and drop the alert; otherwise
+  re-review by **2027-01-14**.
+
 ## Safe harbour
 
 We will not pursue legal action against researchers who act in good faith, follow this policy, avoid privacy

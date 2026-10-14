@@ -48,6 +48,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **The repository is public**, with CodeQL code scanning, secret scanning and push protection, and
   Dependabot updates for both npm (`/studio`) and GitHub Actions enabled.
+- **Hardened Typst escaping** in the `zy` and `bj3` template generators and in the preset-documentation
+  generator: backslashes are escaped *before* quotes and Typst markup characters, so a value can no longer
+  break out of its string literal (CodeQL `js/incomplete-sanitization`). Rendering output is byte-for-byte
+  unchanged for all five templates and all variants.
+- Removed three dead locals/imports, replaced the predictable QR-verification temporary file with a private
+  `mkdtempSync` directory that is removed afterwards, and made `studio/package-lock.json` diffable again.
+- Documented the one remaining `sprintf-js` advisory — dev-only build tooling, no upstream fix — in
+  [`SECURITY.md`](SECURITY.md#known-issues).
 
 ### Planned
 
