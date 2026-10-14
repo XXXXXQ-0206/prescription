@@ -105,8 +105,9 @@ cd <repo>/studio
 ```
 
 `npm run fetch:typst` is idempotent: it exits immediately when `resources/typst.exe` already reports
-`typst 0.15.1`, re-downloads with `-- --force`, and honours `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY`
-(`TYPST_URL` can point at a mirror). If the download is impossible it prints manual alternatives, including
+`typst 0.15.1`, re-downloads with `-- --force`, verifies the official archive against the byte size and
+SHA-256 pinned in the script, and resolves proxies as `--proxy <url>` → `HTTPS_PROXY` / `HTTP_PROXY`
+(honouring `NO_PROXY`, with `--no-proxy` for a forced direct connection; `TYPST_URL` can point at a mirror). If the download is impossible it prints manual alternatives, including
 the plain `typst-0.15.1-windows-x64.exe` attached to this project's v1.0.0 release.
 
 ### Build products: `scripts/*.mjs` are generated

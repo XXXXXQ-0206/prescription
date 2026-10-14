@@ -173,12 +173,16 @@ Git 忽略）。一条命令即可取到固定版本：
 cd studio
 npm run fetch:typst              # Typst 0.15.1 → studio/resources/typst.exe
 npm run fetch:typst -- --force   # 即使本地已有也重新下载
+npm run fetch:typst -- --proxy http://127.0.0.1:7897   # 显式指定代理
+npm run fetch:typst -- --no-proxy                      # 忽略环境变量里的代理
 ```
 
 脚本是幂等的：若 `resources/typst.exe` 已能输出 `typst 0.15.1 (…)` 就直接退出，不联网。它会下载官方
 [Typst 0.15.1 Release](https://github.com/typst/typst/releases/tag/v0.15.1) 的
-`typst-x86_64-pc-windows-msvc.zip` 资源，用纯 JavaScript 解出 `typst.exe`，并自动读取
-`HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY`（`TYPST_URL` 可指向镜像或内网副本）。
+`typst-x86_64-pc-windows-msvc.zip` 资源，**按脚本里固化的字节数与 SHA-256 校验**（官方未提供
+`.sha256` 文件），用纯 JavaScript 解出 `typst.exe`，最后再跑一次 `typst --version` 复核。代理优先级为
+`--proxy <url>` → `HTTPS_PROXY` / `HTTP_PROXY`（含 `NO_PROXY` 例外），`--no-proxy` 强制直连；
+`TYPST_URL` 可指向镜像或内网副本。
 
 没有网络时二选一：
 

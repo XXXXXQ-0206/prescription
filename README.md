@@ -182,13 +182,17 @@ The templates are compiled by the [Typst](https://typst.app/) CLI, which is **no
 cd studio
 npm run fetch:typst              # Typst 0.15.1 → studio/resources/typst.exe
 npm run fetch:typst -- --force   # re-download even if a binary is already there
+npm run fetch:typst -- --proxy http://127.0.0.1:7897   # explicit proxy
+npm run fetch:typst -- --no-proxy                      # ignore the environment
 ```
 
 The script is idempotent: when `resources/typst.exe` already reports `typst 0.15.1 (…)` it exits immediately
 without touching the network. It downloads the official `typst-x86_64-pc-windows-msvc.zip` asset of the pinned
-[Typst release](https://github.com/typst/typst/releases/tag/v0.15.1), unpacks `typst.exe` from it in pure
-JavaScript, and honours `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` (`TYPST_URL` can point at a mirror or an
-intranet copy).
+[Typst release](https://github.com/typst/typst/releases/tag/v0.15.1), checks it against the **byte size and
+SHA-256 fingerprint pinned in the script** (Typst publishes no `.sha256` sidecar), unpacks `typst.exe` from it
+in pure JavaScript and re-runs `typst --version` to confirm the result. Proxies are resolved as
+`--proxy <url>` → `HTTPS_PROXY` / `HTTP_PROXY` (with `NO_PROXY` bypasses), and `--no-proxy` forces a direct
+connection; `TYPST_URL` can point at a mirror or an intranet copy.
 
 Without a network connection, either:
 

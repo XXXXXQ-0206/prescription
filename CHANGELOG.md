@@ -17,7 +17,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   guard that fails the build if a build product (`*.mjs` with a `.ts` source, or any `*.exe`) is committed.
 - **`npm run fetch:typst`** — reproducible acquisition of the pinned Typst 0.15.1 runtime
   (`scripts/fetch-typst.mjs`): idempotent (skips when the local binary already reports 0.15.1), `--force` to
-  re-download, honours `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY`, unpacks the official
+  re-download, verifies the official archive against a **pinned byte size and SHA-256** (`ASSET_SIZE` /
+  `ASSET_SHA256`) before unpacking it, resolves proxies as `--proxy <url>` → `HTTPS_PROXY` / `HTTP_PROXY` with
+  `NO_PROXY` bypasses and `--no-proxy` for a forced direct connection, unpacks the official
   `typst-x86_64-pc-windows-msvc.zip` in pure JavaScript, and prints actionable manual instructions —
   including the ready-made `.exe` attached to the v1.0.0 release — when the download cannot be completed.
 - **`npm run bundle`** — `scripts/bundle.mjs` bundles every `scripts/*.ts` entry point into
