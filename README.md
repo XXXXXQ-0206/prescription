@@ -5,8 +5,8 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6.svg)](https://www.typescriptlang.org/)
 [![Typst](https://img.shields.io/badge/Typst-0.15-239DAD.svg)](https://typst.app/)
-[![CI](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/ci.yml/badge.svg)](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/codeql.yml/badge.svg)](https://github.com/XXXXXQ-0206/prescription-master/actions/workflows/codeql.yml)
+[![CI](https://github.com/XXXXXQ-0206/prescription/actions/workflows/ci.yml/badge.svg)](https://github.com/XXXXXQ-0206/prescription/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/XXXXXQ-0206/prescription/actions/workflows/codeql.yml/badge.svg)](https://github.com/XXXXXQ-0206/prescription/actions/workflows/codeql.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 > A desktop application that generates hospital prescription sheets from a form, lays them out with
@@ -148,8 +148,8 @@ Everything published in this repository is **fictional demonstration data**:
 ### 1. Clone
 
 ```bash
-git clone https://github.com/XXXXXQ-0206/prescription-master.git
-cd prescription-master
+git clone https://github.com/XXXXXQ-0206/prescription.git
+cd prescription
 ```
 
 ### 2. Get the Typst runtime
@@ -198,7 +198,7 @@ Without a network connection, either:
   [Typst releases page](https://github.com/typst/typst/releases) and copy the `typst.exe` inside it to
   `studio/resources/typst.exe`, or
 - download the plain `typst-0.15.1-windows-x64.exe` attached to
-  [this project's v1.0.0 release](https://github.com/XXXXXQ-0206/prescription-master/releases/tag/v1.0.0) and
+  [this project's v1.0.0 release](https://github.com/XXXXXQ-0206/prescription/releases/tag/v1.0.0) and
   save it as `studio/resources/typst.exe`.
 
 Verify with `studio/resources/typst.exe --version` — it must print `typst 0.15.1`. In development the
@@ -283,7 +283,7 @@ These are exactly the steps CI runs on every push to `main` and on every pull re
 ## Project Structure
 
 ```
-prescription-master/
+prescription/
 ├── README.md                     # this file
 ├── LICENSE                       # MIT
 ├── CONTRIBUTING.md  SECURITY.md  CODE_OF_CONDUCT.md  CHANGELOG.md

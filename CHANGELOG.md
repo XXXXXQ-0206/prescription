@@ -136,5 +136,5 @@ First public release.
   through `.gitignore` and were removed from the documentation.
 - Added a security policy, a code of conduct, CodeQL analysis and Dependabot updates.
 
-[Unreleased]: https://github.com/XXXXXQ-0206/prescription-master/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/XXXXXQ-0206/prescription-master/releases/tag/v1.0.0
+[Unreleased]: https://github.com/XXXXXQ-0206/prescription/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/XXXXXQ-0206/prescription/releases/tag/v1.0.0

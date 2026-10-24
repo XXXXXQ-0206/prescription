@@ -16,7 +16,7 @@ any other public channel.** A public report puts every user at risk before a fix
 
 Use GitHub's private vulnerability reporting instead:
 
-1. Open <https://github.com/XXXXXQ-0206/prescription-master/security/advisories/new>
+1. Open <https://github.com/XXXXXQ-0206/prescription/security/advisories/new>
    (repository **Security** tab → **Report a vulnerability**), or
 2. Contact the maintainer [@XXXXXQ-0206](https://github.com/XXXXXQ-0206) privately on GitHub and ask for a
    private channel if the advisory form is unavailable.

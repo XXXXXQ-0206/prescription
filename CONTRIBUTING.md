@@ -73,8 +73,8 @@ Requirements: Windows 10/11 x64, Node.js ≥ 20, and a Typst 0.15.x CLI placed a
 (see the README — the binary is not distributed with the repository).
 
 ```bash
-git clone https://github.com/XXXXXQ-0206/prescription-master.git
-cd prescription-master/studio
+git clone https://github.com/XXXXXQ-0206/prescription.git
+cd prescription/studio
 npm install
 npm start          # build the renderer and launch the app
 ```

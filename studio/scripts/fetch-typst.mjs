@@ -46,7 +46,7 @@ const DEFAULT_VERSION = "0.15.1";
 const UPSTREAM_REPO = "typst/typst";
 /** Plain `.exe` attached to this repository's own release — no unzip step needed. */
 const PROJECT_RELEASE_ASSET =
-  "https://github.com/XXXXXQ-0206/prescription-master/releases/download/v1.0.0/typst-0.15.1-windows-x64.exe";
+  "https://github.com/XXXXXQ-0206/prescription/releases/download/v1.0.0/typst-0.15.1-windows-x64.exe";
 const CRLF = "\r\n";
 /**
  * Fingerprint of the official `typst-x86_64-pc-windows-msvc.zip` release asset.
@@ -211,7 +211,7 @@ function get(target, redirects = 0) {
         port: target.port || (target.protocol === "https:" ? 443 : 80),
         path: target.pathname + target.search,
         headers: {
-          "user-agent": "prescription-master/fetch-typst",
+          "user-agent": "prescription/fetch-typst",
           accept: "application/octet-stream",
         },
         ...(proxy ? { agent: new ProxyAgent(proxy) } : {}),
