@@ -133,6 +133,7 @@ jobs:
         # Inputs arrive through the environment, never interpolated into the script.
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
           TAG: ${{ inputs.tag }}
           PRERELEASE: ${{ inputs.prerelease }}
           TARGET_SHA: ${{ github.sha }}
