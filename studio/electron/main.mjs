@@ -167,7 +167,7 @@ function createWindow() {
     fullscreenable: false,
     show: false,
     backgroundColor: "#0f0f0f",
-    title: "Prescription Master",
+    title: "Prescription",
     icon: path.join(RES, "icon.png"),
     titleBarStyle: "hidden",
     titleBarOverlay: { color: "#0f0f0f", symbolColor: "#d8d8d8", height: 38 },
@@ -244,7 +244,7 @@ function createTray() {
   let img = nativeImage.createFromPath(iconPath);
   if (img.isEmpty()) img = nativeImage.createEmpty();
   tray = new Tray(img.resize({ width: 16, height: 16 }));
-  tray.setToolTip("Prescription Master");
+  tray.setToolTip("Prescription");
   tray.setContextMenu(
     Menu.buildFromTemplate([
       { label: "显示/隐藏主窗口", click: () => toggleMainWindow() },

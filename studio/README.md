@@ -1,4 +1,4 @@
-# Prescription Master（studio/）
+# Prescription（studio/）
 
 应用本体：固定窗口的 Electron 桌面程序 —— 选医院、诊断、药品、医师等数据，**实时预览**并按医院单据版式
 生成处方，导出 **PDF / PNG（300dpi）/ Typst 源码**，也可把整份处方存成 JSON 再载入。
@@ -35,7 +35,7 @@ npm start             # 构建渲染层并启动桌面程序
 | `node scripts/start.mjs --export-test` | 不开窗口，用 `out/generated.typ` 跑通三种导出 |
 | `node scripts/render-all.mjs` | 按各模板默认数据渲染 `out/tpl-<id>.png` |
 | `node scripts/check-presets.mjs` | 断言预设库一致性 |
-| `npm run pack` | 打包成自包含目录 `release/PrescriptionMaster/` |
+| `npm run pack` | 打包成自包含目录 `release/Prescription/` |
 
 > 环境提示：若父进程是 Electron（例如在 IDE 内启动），环境变量里可能带 `ELECTRON_RUN_AS_NODE=1`，
 > 会让 `electron.exe` 退化成纯 Node。`scripts/start.mjs` 与 `scripts/pack.mjs` 已自动清掉该变量。

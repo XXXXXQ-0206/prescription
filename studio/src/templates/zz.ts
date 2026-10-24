@@ -234,7 +234,7 @@ function buildZz(doc: PrescriptionDoc): string {
   const qrText = e.qrText || "https://pay.zzszxyy.com/rx/" + rxNo;
   const qr = qrBlock(qrText, X.qrSide);
   const out: string[] = [];
-  out.push(`// ` + hospital + ` 处方笺 —— 由「Prescription Master」生成，页面 ` + PAGE_W + `pt × ` + PAGE_H + `pt，纯矢量输出`);
+  out.push(`// ` + hospital + ` 处方笺 —— 由「Prescription」生成，页面 ` + PAGE_W + `pt × ` + PAGE_H + `pt，纯矢量输出`);
   out.push(preamble(PAGE_W, PAGE_H, { margin: "0pt", baseSize: BODY }));
   out.push(QR_HELPER);
   out.push(HELPERS);

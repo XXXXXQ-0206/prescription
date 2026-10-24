@@ -1,10 +1,10 @@
 {
-  "name": "prescription-master",
-  "productName": "Prescription Master",
+  "name": "prescription",
+  "productName": "Prescription",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Prescription Master —— 选择医院/诊断/药品等生成处方单据，Typst 排版并导出 PDF/PNG",
+  "description": "Prescription —— 选择医院/诊断/药品等生成处方单据，Typst 排版并导出 PDF/PNG",
   "main": "electron/main.mjs",
   "scripts": {
     "dev": "node scripts/start.mjs --dev",
@@ -52,8 +52,8 @@
     "vite": "^8.3.4"
   },
   "build": {
-    "appId": "com.prescriptionmaster.desktop",
-    "productName": "Prescription Master",
+    "appId": "com.prescription.desktop",
+    "productName": "Prescription",
     "directories": {
       "output": "release",
       "buildResources": "resources"
@@ -96,11 +96,11 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Prescription Master",
-      "artifactName": "Prescription-Master-Setup-${version}.${ext}"
+      "shortcutName": "Prescription",
+      "artifactName": "Prescription-Setup-${version}.${ext}"
     },
     "portable": {
-      "artifactName": "Prescription-Master-Portable-${version}.${ext}"
+      "artifactName": "Prescription-Portable-${version}.${ext}"
     }
   }
 }

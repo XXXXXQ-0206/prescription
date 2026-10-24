@@ -2,7 +2,7 @@
 
 > 中文版：[docs/zh-CN/PACKAGING.md](zh-CN/PACKAGING.md)
 
-**Prescription Master** (`studio`) is an Electron + React desktop application that fills in Chinese hospital
+**Prescription** (`studio`) is an Electron + React desktop application that fills in Chinese hospital
 prescription forms, lays them out with Typst, and exports PDF / PNG / SVG. This page describes **Path A**: how
 `studio` is packed into a **self-contained, no-install directory**, so that it can be copied to any 64-bit
 Windows machine and started by double-clicking a single `.bat` — no Node.js, npm, .NET or other runtime has to
@@ -11,8 +11,8 @@ be installed on the target machine.
 | Item | Value |
 | --- | --- |
 | Pack script | [`studio/scripts/pack.mjs`](../studio/scripts/pack.mjs) |
-| Output directory | `studio/release/PrescriptionMaster/` |
-| Launcher for end users | `Prescription Master.bat` |
+| Output directory | `studio/release/Prescription/` |
+| Launcher for end users | `Prescription.bat` |
 | Unattended self-check | `自检截图.bat` |
 | End-user readme inside the build | `README-使用说明.txt` |
 | Recorded run environment | Windows x64 · Node v22.23.2 · Electron 43.7.9 · Typst 0.15.1 |
@@ -37,7 +37,7 @@ other.
 | | Path A — `scripts/pack.mjs` (this page) | Path B — electron-builder |
 | --- | --- | --- |
 | Command | `npm run pack` / `node scripts/pack.mjs` | no npm script; the `build` block in `studio/package.json` is electron-builder config |
-| Output | `studio/release/PrescriptionMaster/` (plain directory) | `Prescription-Master-Setup-<version>.exe` (NSIS), `Prescription-Master-Portable-<version>.exe`, `win-unpacked/` |
+| Output | `studio/release/Prescription/` (plain directory) | `Prescription-Setup-<version>.exe` (NSIS), `Prescription-Portable-<version>.exe`, `win-unpacked/` |
 | Dependencies | none beyond Node built-ins | `electron-builder` (`^26.15.3`, devDependency) |
 | Kernel | copies `resources/typst.exe` into `app/resources/` | `extraResources` copies `resources/typst.exe` and `resources/icon.png` next to `app.asar` |
 | Typical use | hand-off on a USB stick, locked-down hospital PCs, no installer | signed installer / single-file portable `.exe` |
@@ -45,7 +45,7 @@ other.
 Notes on Path B:
 
 - `studio/release/` in the current working tree contains the electron-builder artifacts from that
-  configuration (`Prescription-Master-Setup-1.0.0.exe`, `Prescription-Master-Portable-1.0.0.exe`,
+  configuration (`Prescription-Setup-1.0.0.exe`, `Prescription-Portable-1.0.0.exe`,
   `win-unpacked/`).
 - The `build` block targets x64 only: `nsis` (with `oneClick: false`, user-level install, desktop + start-menu
   shortcuts) and `portable`, uses `resources/icon.ico` as the app icon and `resources` as `buildResources`.
@@ -160,13 +160,13 @@ npm run pack
 ```
 
 When it finishes, **the thing you distribute is the single directory
-`studio/release/PrescriptionMaster/`** — copy it whole.
+`studio/release/Prescription/`** — copy it whole.
 
 ### Recorded output
 
 ```
 [pack] studio 根目录: <repo>/studio
-[pack] 产物目录: <repo>/studio/release/PrescriptionMaster
+[pack] 产物目录: <repo>/studio/release/Prescription
 [pack] ELECTRON_RUN_AS_NODE 当前值 = "1" （打包/验证时会清掉）
 [pack] 复制 Electron 运行时（约 300+ MB，请稍候）...
 [pack]   Electron 复制完成 0.2s
@@ -179,7 +179,7 @@ When it finishes, **the thing you distribute is the single directory
 [pack]   其中 应用代码 : 50.6 MB（8 个文件）
 [pack]   typst.exe     : 50.1 MB
 [pack]   语言包        : 完整 55 个
-[pack] 启动器          : Prescription Master.bat
+[pack] 启动器          : Prescription.bat
 [pack] 耗时            : 0.3s
 [pack] ==============================
 
@@ -190,7 +190,7 @@ When it finishes, **the thing you distribute is the single directory
 [pack]    stdout: SHOT_SAVED <out>\app\shot.png
 [pack]    ✔ 截图已生成: <out>\app\shot.png  0.1 MB
 
-[pack] 完成。分发时把整个 PrescriptionMaster 目录拷走即可。
+[pack] 完成。分发时把整个 Prescription 目录拷走即可。
 ```
 
 Key lines translated, for readers who do not read Chinese:
@@ -216,7 +216,7 @@ Key lines translated, for readers who do not read Chinese:
 | Option | Effect |
 | --- | --- |
 | `--build` | Run `npm run build` (vite) before packing |
-| `--out <dir>` | Custom output root; default is `<repo>/studio/release`. The build lands in `<dir>/PrescriptionMaster/` |
+| `--out <dir>` | Custom output root; default is `<repo>/studio/release`. The build lands in `<dir>/Prescription/` |
 | `--no-locales` | Keep only three locale packs: `zh-CN`, `en-US`, `zh-TW` |
 | `--no-verify` | Skip the automatic `--version` + `--shot` verification (use on machines without a display) |
 
@@ -244,13 +244,13 @@ No administrator rights are needed: everything is written under `studio/release/
 ## Output layout
 
 ```
-studio/release/PrescriptionMaster/
+studio/release/Prescription/
 ├── electron.exe                 ← Electron 43.7.9 runtime (main program, 228 MB on disk)
 ├── *.dll, *.pak, icudtl.dat      Chromium / GPU / multimedia dependencies
 ├── locales/                     locale packs (55 by default)
 ├── resources/
 │   └── default_app.asar         Electron's own placeholder app — MUST be kept (see Pitfalls)
-├── Prescription Master.bat      ← double-click this to start
+├── Prescription.bat      ← double-click this to start
 ├── 自检截图.bat                  unattended self-check: writes a screenshot, then exits
 ├── README-使用说明.txt           one-page readme for end users
 └── app/                         ← application code (8 files, ~50.6 MB)
@@ -285,7 +285,7 @@ Design notes:
 
 ### Double-click (what end users do)
 
-Double-click `PrescriptionMaster\Prescription Master.bat`. The launcher generated by `pack.mjs` (UTF-8 with
+Double-click `Prescription\Prescription.bat`. The launcher generated by `pack.mjs` (UTF-8 with
 BOM, `chcp 65001`, CRLF) is:
 
 ```bat
@@ -368,7 +368,7 @@ shipped directory.
 
 1. **Validates** `node_modules/electron/dist/electron.exe` and `dist/index.html`; a missing one aborts with the
    exact fix command printed. `--build` runs `npm run build` first.
-2. **Deletes the previous build** (`release/PrescriptionMaster/`) and recreates it.
+2. **Deletes the previous build** (`release/Prescription/`) and recreates it.
 3. **Copies the whole Electron runtime** (~360 MB, including its `resources/` directory) to the build root.
    The script warns if `resources/` is missing afterwards.
 4. **Copies the application code** into `app/`: `dist/`, `electron/`, `templates/` (if present), and only
@@ -377,7 +377,7 @@ shipped directory.
 5. **Rewrites `app/package.json`**, keeping only what the runtime needs (`name`, `version`, `private`, `type`,
    `description`, `main` → `electron/main.mjs`, `dependencies`) and dropping `devDependencies`, `scripts` and
    the electron-builder `build` block.
-6. **Generates the launchers**: `Prescription Master.bat`, `自检截图.bat` and `README-使用说明.txt`, all UTF-8
+6. **Generates the launchers**: `Prescription.bat`, `自检截图.bat` and `README-使用说明.txt`, all UTF-8
    **with BOM**, so that Chinese text stays readable in `cmd` under `chcp 65001`.
 7. **Prints statistics**: total size, file count, Electron / app-code split, kernel size, locale-pack count,
    launcher name, elapsed time.
@@ -487,12 +487,12 @@ The build was copied as a whole to another, clean ASCII path (`D:\portable_test\
 `.bat` **from a shell that had `ELECTRON_RUN_AS_NODE=1` set**:
 
 ```powershell
-PS> Copy-Item <out> D:\portable_test\PrescriptionMaster -Recurse   # 87 files / 431 MB
-PS> cd D:\portable_test\PrescriptionMaster
-PS> cmd /c Prescription Master.bat        # $env:ELECTRON_RUN_AS_NODE = 1 in this shell
+PS> Copy-Item <out> D:\portable_test\Prescription -Recurse   # 87 files / 431 MB
+PS> cd D:\portable_test\Prescription
+PS> cmd /c Prescription.bat        # $env:ELECTRON_RUN_AS_NODE = 1 in this shell
 PS> Get-Process electron | Select Id,MainWindowTitle
    Id ProcessName MainWindowTitle
-166388 electron    Prescription Master      ← the window really exists
+166388 electron    Prescription      ← the window really exists
 ```
 
 ✅ The build is self-contained and relocatable, and the `.bat` launcher really does neutralise
@@ -549,7 +549,7 @@ generic fonts.
 The unsigned `electron.exe` is frequently flagged, and Chinese-named `.bat` files tend to trip script
 heuristics as well:
 
-- Add the whole `PrescriptionMaster` directory to the antivirus exclusion list.
+- Add the whole `Prescription` directory to the antivirus exclusion list.
 - For SmartScreen prompts: "More info" → "Run anyway".
 - For public distribution, code-sign `electron.exe` with `signtool`, or wrap the app in an installer with Inno
   Setup / NSIS (Path B in this document).
@@ -574,7 +574,7 @@ No. The build is self-contained: **copy the whole directory**. Re-pack only when
 
 ### Q9. Desktop shortcut / start with Windows
 
-Right-click `Prescription Master.bat` → "Send to" → "Desktop (create shortcut)". Put a shortcut in
+Right-click `Prescription.bat` → "Send to" → "Desktop (create shortcut)". Put a shortcut in
 `shell:startup` to launch it at logon. An `.ico` converted from `app/resources/icon.png` can be used as the
 shortcut icon.
 
@@ -603,7 +603,7 @@ Releases are produced by [`.github/workflows/release.yml`](../.github/workflows/
 
 - **The binaries are not code-signed.** No certificate is configured, so Windows SmartScreen and some antivirus
   products warn about an unknown publisher. Every release ships `SHA256SUMS.txt` so users can verify what they
-  downloaded (`Get-FileHash .\Prescription-Master-Setup-<version>.exe -Algorithm SHA256`, or
+  downloaded (`Get-FileHash .\Prescription-Setup-<version>.exe -Algorithm SHA256`, or
   `certutil -hashfile <file> SHA256`). A code-signing certificate is the only real fix.
 - **Assets are built in CI from the dispatched revision**, which is what makes them reproducible. Do not upload
   locally built binaries without publishing their checksums too.
@@ -620,7 +620,7 @@ Releases are produced by [`.github/workflows/release.yml`](../.github/workflows/
       verification passes, exit 0)
 - [ ] `resources/default_app.asar` exists under the build root
 - [ ] `app/resources/typst.exe` exists and can print its version
-- [ ] After copying the whole directory to the target machine, double-clicking `Prescription Master.bat`
+- [ ] After copying the whole directory to the target machine, double-clicking `Prescription.bat`
       opens the window
 - [ ] Export one PDF on the target machine
 - [ ] Antivirus whitelist configured for the directory where needed
@@ -636,7 +636,7 @@ would break the generated launchers and confuse end users. Values that appear in
 | Unattended self-check launcher | `自检截图.bat` | written by `pack.mjs` |
 | End-user readme | `README-使用说明.txt` | written by `pack.mjs` (UTF-8 with BOM) |
 | Tray menu entries | `显示/隐藏主窗口`, `退出` | `studio/electron/main.mjs` |
-| Window title | `Prescription Master` (Latin) | `studio/electron/main.mjs` |
+| Window title | `Prescription` (Latin) | `studio/electron/main.mjs` |
 | Locale packs | `zh-CN.pak`, `en-US.pak`, `zh-TW.pak` kept by `--no-locales` | Electron runtime |
 
 Sample domain values shown in the UI are Chinese as well — hospital names, diagnoses, drug names and

@@ -1,4 +1,4 @@
-# Contributing to Prescription Master
+# Contributing to Prescription
 
 First of all, thank you for taking the time to contribute! 🎉
 

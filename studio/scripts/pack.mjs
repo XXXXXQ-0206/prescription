@@ -3,11 +3,11 @@
  * pack.mjs —— 把 studio 打包成「免安装（portable）」的 Windows 目录。
  *
  * 产物结构：
- *   studio/release/PrescriptionMaster/
+ *   studio/release/Prescription/
  *     electron.exe, *.dll, *.pak, locales/ ...   ← Electron 运行时（整份复制）
  *     app/                                       ← 应用代码（main 指向 app/electron/main.mjs）
  *       package.json  dist/  electron/  resources/  templates/  docs/
- *     Prescription Master.bat                        ← 双击启动器
+ *     Prescription.bat                        ← 双击启动器
  *     README-使用说明.txt
  *
  * 零新增依赖：只用 node: 内置模块。
@@ -32,8 +32,8 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");            // studio/
-const APP_NAME = "PrescriptionMaster";
-const BAT_NAME = "Prescription Master.bat";
+const APP_NAME = "Prescription";
+const BAT_NAME = "Prescription.bat";
 
 const argv = process.argv.slice(2);
 const has = (f) => argv.includes(f);
@@ -217,12 +217,12 @@ async function main() {
   await fsp.writeFile(path.join(OUT_DIR, "自检截图.bat"), "\ufeff" + verify, "utf8");
 
   const readme = [
-    "Prescription Master —— 免安装（portable）版",
+    "Prescription —— 免安装（portable）版",
     "==============================================",
     "",
     "【怎么跑】",
-    "1. 把整个 PrescriptionMaster 目录拷贝到目标机器（任意目录，包含中文/空格路径均可）。",
-    "2. 双击「Prescription Master.bat」即可启动。首次启动约 2-4 秒。",
+    "1. 把整个 Prescription 目录拷贝到目标机器（任意目录，包含中文/空格路径均可）。",
+    "2. 双击「Prescription.bat」即可启动。首次启动约 2-4 秒。",
     "   也可以在本目录执行 .\\electron.exe .\\app 启动，",
     "   但必须先真正删掉环境变量 ELECTRON_RUN_AS_NODE（cmd: set ELECTRON_RUN_AS_NODE=）。",
     "",

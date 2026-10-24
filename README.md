@@ -1,4 +1,4 @@
-# Prescription Master
+# Prescription
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Electron](https://img.shields.io/badge/Electron-43-47848F.svg)](https://www.electronjs.org/)
@@ -16,7 +16,7 @@
 
 ## Project Overview
 
-Prescription Master is an Electron desktop application for producing prescription sheets that match the
+Prescription is an Electron desktop application for producing prescription sheets that match the
 paper layouts used by several hospitals. The user fills in a form (hospital, patient, diagnosis, drugs,
 prescription options); the application converts that data into a Typst document, compiles it with a
 bundled Typst engine, and renders the result as a vector SVG preview plus PDF / PNG exports.
@@ -26,7 +26,7 @@ The repository contains two deliverables:
 | # | Deliverable | Location | Description |
 | - | ----------- | -------- | ----------- |
 | 1 | Typst replica of a scanned prescription | [`prescription.typ`](prescription.typ), [`prescription_scan_like.typ`](prescription_scan_like.typ) | A scanned sheet was measured pixel by pixel and re-typeset as vector Typst at 1 px = 0.5 pt. |
-| 2 | **Prescription Master** desktop app | [`studio/`](studio/) | Multi-template prescription generator with live preview and PDF/PNG/Typst export. |
+| 2 | **Prescription** desktop app | [`studio/`](studio/) | Multi-template prescription generator with live preview and PDF/PNG/Typst export. |
 
 The scanned source sheets and every development artefact derived from them are **deliberately not
 distributed** (see [Privacy and data](#privacy-and-data)). All sample data shipped in the source code is
@@ -106,7 +106,7 @@ Everything is editable — the presets are starting points, not a controlled voc
 
 ## Screenshots
 
-![Prescription Master main window](docs/images/screenshot-app.png)
+![Prescription main window](docs/images/screenshot-app.png)
 
 *Form on the left, live vector preview on the right, export buttons in the top bar.*
 
@@ -261,11 +261,11 @@ npm run bundle
 npm run build                 # → studio/dist
 
 # 4. Package the desktop application
-npm run pack                  # → studio/release/PrescriptionMaster/
+npm run pack                  # → studio/release/Prescription/
 ```
 
 `npm run pack` calls `scripts/pack.mjs`, a dependency-free packager that copies the Electron runtime plus the
-application files into a **self-contained, relocatable folder** (`studio/release/PrescriptionMaster/`, ignored
+application files into a **self-contained, relocatable folder** (`studio/release/Prescription/`, ignored
 by Git), generates the launchers and smoke-tests the result. An NSIS installer / portable `.exe` can
 additionally be produced with `npx electron-builder --win`, which uses the `build` block in
 `studio/package.json` and picks up `resources/typst.exe` through `extraResources`. Both paths require

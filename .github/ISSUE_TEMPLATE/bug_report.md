@@ -28,7 +28,7 @@ assignees: []
 
 | Field | Value |
 | ----- | ----- |
-| Prescription Master version | <!-- e.g. 1.0.0 --> |
+| Prescription version | <!-- e.g. 1.0.0 --> |
 | Template | <!-- bj6 / zz / bj3 / zy / cq, or "interface" --> |
 | Windows version | <!-- e.g. Windows 11 23H2 x64 --> |
 | Node.js version (if running from source) | |

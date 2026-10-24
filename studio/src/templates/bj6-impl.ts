@@ -181,7 +181,7 @@ export function buildTypst(doc: PrescriptionDoc): string {
   const L: string[] = [];
   L.push(`// ============================================================
 //  ${doc.hospital} · ${doc.docType}
-//  由「Prescription Master」按选定的医院/诊断/药品/医师等数据生成
+//  由「Prescription」按选定的医院/诊断/药品/医师等数据生成
 //  页面 836pt × 470.5pt（1 原图像素 = 0.5pt），纯矢量输出
 //  字体：中文 SimSun（宋体）；Rp、合计金额为 Arial Bold；条码数字为 Courier New
 // ============================================================

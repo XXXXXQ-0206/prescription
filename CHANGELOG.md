@@ -38,6 +38,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- **Single project identity** — the repository, application, npm package, Electron app ID, portable
+  directory, launchers and release artifacts now all use `Prescription`; the former project-name suffix has
+  been retired.
 - **Build products are no longer committed.** The ten `studio/scripts/*.mjs` files that have a `.ts` source
   are rolldown output: they are now ignored through `studio/scripts/.gitignore` and rebuilt with
   `npm run bundle` after a clone (or after editing a source). The hand-written `.mjs` tools remain tracked.

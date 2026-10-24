@@ -1,9 +1,9 @@
 # 打包与分发（免安装 / portable）
 
-把 **Prescription Master**（`studio`）打包成一个**免安装目录**：拷到任意 64 位 Windows 机器上，双击一个 `.bat` 就能运行，不需要装 Node.js、npm、.NET 或任何运行库。
+把 **Prescription**（`studio`）打包成一个**免安装目录**：拷到任意 64 位 Windows 机器上，双击一个 `.bat` 就能运行，不需要装 Node.js、npm、.NET 或任何运行库。
 
 - 打包脚本：[`scripts/pack.mjs`](../scripts/pack.mjs)
-- 产物目录：`studio/release/PrescriptionMaster/`
+- 产物目录：`studio/release/Prescription/`
 - 产物里自带一份面向最终用户的 `README-使用说明.txt`
 
 > 本文档中的命令与输出均为**本机实际执行**的真实结果（Windows + Node v22.23.2 + Electron 43.7.9 + Typst 0.15.1）。
@@ -25,13 +25,13 @@ node scripts/pack.mjs --build
 npm run pack
 ```
 
-跑完后，**要分发的东西就是 `studio/release/PrescriptionMaster` 这一个目录**，整个拷走即可。
+跑完后，**要分发的东西就是 `studio/release/Prescription` 这一个目录**，整个拷走即可。
 
 ### 实测输出
 
 ```
 [pack] studio 根目录: <repo>/studio
-[pack] 产物目录: <repo>/studio/release/PrescriptionMaster
+[pack] 产物目录: <repo>/studio/release/Prescription
 [pack] ELECTRON_RUN_AS_NODE 当前值 = "1" （打包/验证时会清掉）
 [pack] 复制 Electron 运行时（约 300+ MB，请稍候）...
 [pack]   Electron 复制完成 0.2s
@@ -44,7 +44,7 @@ npm run pack
 [pack]   其中 应用代码 : 50.6 MB（8 个文件）
 [pack]   typst.exe     : 50.1 MB
 [pack]   语言包        : 完整 55 个
-[pack] 启动器          : Prescription Master.bat
+[pack] 启动器          : Prescription.bat
 [pack] 耗时            : 0.3s
 [pack] ==============================
 
@@ -52,10 +52,10 @@ npm run pack
 [pack]    electron.exe --version → v43.7.9
 [pack]    ✔ 运行时自检通过（Electron v43.7.9）
 [pack]    electron.exe <app> --shot → exit 0  (5.3s)
-[pack]    stdout: SHOT_SAVED ...\PrescriptionMaster\app\shot.png
-[pack]    ✔ 截图已生成: ...\PrescriptionMaster\app\shot.png  0.1 MB
+[pack]    stdout: SHOT_SAVED ...\Prescription\app\shot.png
+[pack]    ✔ 截图已生成: ...\Prescription\app\shot.png  0.1 MB
 
-[pack] 完成。分发时把整个 PrescriptionMaster 目录拷走即可。
+[pack] 完成。分发时把整个 Prescription 目录拷走即可。
 ```
 
 > 复制耗时 `0.2s` 是**操作系统文件缓存命中**的结果（同一份 Electron 刚被读过）。冷启动首次打包大约几十秒到一两分钟，属正常，无需优化。
@@ -86,13 +86,13 @@ npm run pack
 ## 2. 产物结构
 
 ```
-studio/release/PrescriptionMaster/
+studio/release/Prescription/
 ├── electron.exe                 ← Electron 43.7.9 运行时（主程序，229 MB）
 ├── *.dll, *.pak, icudtl.dat      Chromium / GPU / 多媒体依赖
 ├── locales/                     55 个语言包
 ├── resources/
 │   └── default_app.asar         ★ Electron 自带，必须保留（见第 5.2 节）
-├── Prescription Master.bat          ← ★ 双击这个启动
+├── Prescription.bat          ← ★ 双击这个启动
 ├── 自检截图.bat                  ← 无人值守自检：生成截图后自动退出
 ├── README-使用说明.txt          给最终用户看的一页纸
 └── app/                         ← 应用代码（8 个文件，约 50.6 MB）
@@ -117,7 +117,7 @@ studio/release/PrescriptionMaster/
 
 ### 3.1 双击（推荐给最终用户）
 
-双击 `PrescriptionMaster\Prescription Master.bat`。核心两行：
+双击 `Prescription\Prescription.bat`。核心两行：
 
 ```bat
 set ELECTRON_RUN_AS_NODE=
@@ -175,7 +175,7 @@ electron.exe app --export-test
 2. **复制 Electron 运行时**整份到产物根目录（360 MB，含 `resources/` 子目录）。
 3. **复制应用代码**到 `app/`：`dist/`、`electron/`、`resources/`（只挑 `typst.exe` 与 `icon.*`）、`templates/`。
 4. **重写 `app/package.json`**：只留运行必需字段，`main` → `electron/main.mjs`，剥掉 `devDependencies`/`scripts`。
-5. **生成启动器**：`Prescription Master.bat`、`自检截图.bat`、`README-使用说明.txt`（UTF-8 **带 BOM** + `chcp 65001`，保证 cmd 里中文不乱码）。
+5. **生成启动器**：`Prescription.bat`、`自检截图.bat`、`README-使用说明.txt`（UTF-8 **带 BOM** + `chcp 65001`，保证 cmd 里中文不乱码）。
 6. **打印统计**：总体积、文件数、Electron/应用代码占比、typst 体积、语言包数、耗时。
 7. **自动验证**：用**产物里的** `electron.exe` 跑 `--version` 与 `--shot`，任一步失败即 `exit 2`。
 
@@ -239,7 +239,7 @@ TypeError: Cannot read properties of undefined (reading 'whenReady')
 PS> node scripts/pack.mjs
 ... （见第 1 节完整输出）
 [pack] ✔ 运行时自检通过（Electron v43.7.9）
-[pack] ✔ 截图已生成: ...\PrescriptionMaster\app\shot.png
+[pack] ✔ 截图已生成: ...\Prescription\app\shot.png
 ```
 
 退出码 **0**。
@@ -248,7 +248,7 @@ PS> node scripts/pack.mjs
 
 ```
 electron.exe <app> --shot → exit 0  (5.3s)
-stdout: SHOT_SAVED ...\PrescriptionMaster\app\shot.png
+stdout: SHOT_SAVED ...\Prescription\app\shot.png
 ```
 
 截图 1860×1230，界面完整（左侧表单、右侧 Typst 预览、顶部工具栏），标题栏显示 `Typst 0.15.1 (9dfd3a08) · SimSun 排版`，状态栏显示 `渲染 633 ms · 矢量 SVG · 导出为 PDF/PNG 为 300dpi`、`版式校验通过`。
@@ -269,12 +269,12 @@ svg: OK 348581 bytes -> out/selftest.svg
 把产物**整体复制到另一个干净的 ASCII 路径**（如 `D:\portable_test\`），并且在**带有 `ELECTRON_RUN_AS_NODE=1` 的 shell** 里通过 `.bat` 启动：
 
 ```powershell
-PS> Copy-Item <产物> D:\portable_test\PrescriptionMaster -Recurse   # 87 个文件 / 431 MB
-PS> cd D:\portable_test\PrescriptionMaster
-PS> cmd /c Prescription Master.bat        # 该 shell 中 $env:ELECTRON_RUN_AS_NODE = 1
+PS> Copy-Item <产物> D:\portable_test\Prescription -Recurse   # 87 个文件 / 431 MB
+PS> cd D:\portable_test\Prescription
+PS> cmd /c Prescription.bat        # 该 shell 中 $env:ELECTRON_RUN_AS_NODE = 1
 PS> Get-Process electron | Select Id,MainWindowTitle
    Id ProcessName MainWindowTitle
-166388 electron    Prescription Master      ← 窗口真实存在
+166388 electron    Prescription      ← 窗口真实存在
 ```
 
 ✅ 证明：产物自包含、可搬迁，且 `.bat` 启动器确实把 `ELECTRON_RUN_AS_NODE` 处理掉了。
@@ -283,7 +283,7 @@ PS> Get-Process electron | Select Id,MainWindowTitle
 
 ```
 PS> cmd /c 自检截图.bat
-SHOT_SAVED ...\PrescriptionMaster\app\shot.png
+SHOT_SAVED ...\Prescription\app\shot.png
 exit=0
 ```
 
@@ -319,7 +319,7 @@ Electron 用系统字体渲染。精简版 Windows 或缺少中文字体（SimSu
 
 ### Q5. 杀软 / SmartScreen 拦截
 未签名的 `electron.exe` 常被误报（中文名 `.bat` 也容易触发脚本启发式扫描）：
-- 把整个 `PrescriptionMaster` 目录加入杀软排除项。
+- 把整个 `Prescription` 目录加入杀软排除项。
 - SmartScreen 提示 →「更多信息」→「仍要运行」。
 - 正式对外分发建议用 `signtool` 对 `electron.exe` 做代码签名，或改用 Inno Setup / NSIS 打成安装包。
 
@@ -335,7 +335,7 @@ Electron 用系统字体渲染。精简版 Windows 或缺少中文字体（SimSu
 不需要，产物自包含，**直接复制整个目录**。只有这些情况需要重打：改了 `src/` 后重新 `npm run build`、升级 Electron、改了 `electron/` 主进程、替换 `typst.exe`。
 
 ### Q9. 桌面快捷方式 / 开机自启
-右键 `Prescription Master.bat` →「发送到」→「桌面快捷方式」；放进 `shell:startup` 可开机自启。图标可用 `app/resources/icon.png` 转成的 `.ico`。
+右键 `Prescription.bat` →「发送到」→「桌面快捷方式」；放进 `shell:startup` 可开机自启。图标可用 `app/resources/icon.png` 转成的 `.ico`。
 
 ---
 
@@ -345,7 +345,7 @@ Electron 用系统字体渲染。精简版 Windows 或缺少中文字体（SimSu
 - [ ] `node scripts/pack.mjs` 全绿（统计正常 + `--version` 打印 v43.x + 截图验证通过，exit 0）
 - [ ] 产物根目录存在 `resources/default_app.asar`
 - [ ] `app/resources/typst.exe` 存在且能打印版本号
-- [ ] 在目标机器完整复制目录后，双击 `Prescription Master.bat`，窗口出现
+- [ ] 在目标机器完整复制目录后，双击 `Prescription.bat`，窗口出现
 - [ ] 目标机器上试一次 PDF 导出
 - [ ] 必要时为目录配置杀软白名单
 
@@ -371,7 +371,7 @@ Electron 用系统字体渲染。精简版 Windows 或缺少中文字体（SimSu
 ### 注意事项
 
 - **产物没有代码签名**：没有配置证书，Windows SmartScreen 与部分杀软会提示"未知发布者"。每个 Release 都会
-  附带 `SHA256SUMS.txt` 供用户核验（`Get-FileHash .\Prescription-Master-Setup-<版本>.exe -Algorithm SHA256`
+  附带 `SHA256SUMS.txt` 供用户核验（`Get-FileHash .\Prescription-Setup-<版本>.exe -Algorithm SHA256`
   或 `certutil -hashfile <文件> SHA256`）。根治办法是申请代码签名证书。
 - **产物一律由 CI 从被触发的提交构建**，这是可复现性的来源；不要手工上传本机构建的二进制（除非同时公布校验值）。
 - CI **不会静默安装** NSIS 安装包（需要一次性虚拟机）；冒烟测试请用免安装版。

@@ -2,7 +2,7 @@
 
 > Chinese version / 中文版: [docs/zh-CN/TEMPLATES.md](zh-CN/TEMPLATES.md)
 
-Every prescription sheet in Prescription Master is produced by a **template**: one TypeScript module that
+Every prescription sheet in Prescription is produced by a **template**: one TypeScript module that
 bundles a *layout declaration*, a *form-field requirement*, and a *Typst builder*.
 
 | Part | Declared by | Purpose |
